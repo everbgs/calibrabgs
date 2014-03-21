@@ -1,1 +1,0 @@
-g++ `pkg-config --cflags --libs opencv` nomeArquivo.cpp -o nomeArquivo

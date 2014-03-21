@@ -1,0 +1,21 @@
+Instalação OpenCV 2.4.8:
+http://indranilsinharoy.com/2012/11/01/installing-opencv-on-linux/
+
+Configure .pro QT Linux:
+INCLUDEPATH += /usr/local/include/opencv
+LIBS += `pkg-config opencv –cflags –libs`
+ou
+INCLUDEPATH += /usr/local/include/opencv
+LIBS += -L/usr/local/lib
+LIBS += -lopencv_core
+LIBS += -lopencv_imgproc
+LIBS += -lopencv_highgui
+LIBS += -lopencv_ml
+LIBS += -lopencv_video
+LIBS += -lopencv_features2d
+LIBS += -lopencv_calib3d
+LIBS += -lopencv_objdetect
+LIBS += -lopencv_contrib
+LIBS += -lopencv_legacy
+LIBS += -lopencv_flann
+LIBS += -lopencv_nonfre
