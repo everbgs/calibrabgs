@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Sistema de Calibração</string>
   </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="pgVisao">
@@ -42,7 +45,7 @@
         <string>TextLabel</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit">
+      <widget class="QPlainTextEdit" name="edMaxR">
        <property name="geometry">
         <rect>
          <x>552</x>
@@ -59,11 +62,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QSlider" name="verticalSlider_2">
+      <widget class="QSlider" name="sliderMaxR">
        <property name="geometry">
         <rect>
          <x>584</x>
@@ -79,7 +85,7 @@
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
-      <widget class="QSlider" name="verticalSlider_4">
+      <widget class="QSlider" name="sliderMaxG">
        <property name="geometry">
         <rect>
          <x>636</x>
@@ -95,7 +101,7 @@
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
-      <widget class="QSlider" name="verticalSlider_5">
+      <widget class="QSlider" name="sliderMaxB">
        <property name="geometry">
         <rect>
          <x>689</x>
@@ -231,14 +237,17 @@
         <string>Cores a Utilizar</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="cbCor">
        <property name="geometry">
         <rect>
          <x>660</x>
          <y>3</y>
-         <width>101</width>
-         <height>22</height>
+         <width>111</width>
+         <height>31</height>
         </rect>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
        </property>
        <property name="frame">
         <bool>true</bool>
@@ -292,23 +301,23 @@
       <widget class="QPushButton" name="pushButton">
        <property name="geometry">
         <rect>
-         <x>552</x>
-         <y>527</y>
+         <x>550</x>
+         <y>510</y>
          <width>75</width>
-         <height>23</height>
+         <height>31</height>
         </rect>
        </property>
        <property name="text">
         <string>Iniciar</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="btnCarregar">
        <property name="geometry">
         <rect>
          <x>700</x>
          <y>482</y>
-         <width>61</width>
-         <height>23</height>
+         <width>81</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="text">
@@ -318,17 +327,17 @@
       <widget class="QPushButton" name="pushButton_3">
        <property name="geometry">
         <rect>
-         <x>940</x>
+         <x>920</x>
          <y>430</y>
-         <width>81</width>
-         <height>23</height>
+         <width>111</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="text">
         <string>Salvar Arquivo</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_2">
+      <widget class="QPlainTextEdit" name="edMaxG">
        <property name="geometry">
         <rect>
          <x>604</x>
@@ -345,11 +354,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_3">
+      <widget class="QPlainTextEdit" name="edMaxB">
        <property name="geometry">
         <rect>
          <x>657</x>
@@ -365,6 +377,9 @@
        </property>
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
        <property name="plainText">
         <string>0</string>
@@ -390,7 +405,7 @@
         <string>G</string>
        </property>
       </widget>
-      <widget class="QSlider" name="verticalSlider_6">
+      <widget class="QSlider" name="sliderMinB">
        <property name="geometry">
         <rect>
          <x>855</x>
@@ -406,7 +421,7 @@
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
-      <widget class="QSlider" name="verticalSlider_7">
+      <widget class="QSlider" name="sliderMinG">
        <property name="geometry">
         <rect>
          <x>802</x>
@@ -422,7 +437,7 @@
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_4">
+      <widget class="QPlainTextEdit" name="edMinG">
        <property name="geometry">
         <rect>
          <x>770</x>
@@ -438,6 +453,9 @@
        </property>
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
        <property name="plainText">
         <string>0</string>
@@ -463,7 +481,7 @@
         <string>R</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_5">
+      <widget class="QPlainTextEdit" name="edMinB">
        <property name="geometry">
         <rect>
          <x>823</x>
@@ -480,11 +498,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_6">
+      <widget class="QPlainTextEdit" name="edMinR">
        <property name="geometry">
         <rect>
          <x>718</x>
@@ -501,11 +522,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QSlider" name="verticalSlider_3">
+      <widget class="QSlider" name="sliderMinR">
        <property name="geometry">
         <rect>
          <x>750</x>
@@ -516,6 +540,9 @@
        </property>
        <property name="maximum">
         <number>255</number>
+       </property>
+       <property name="value">
+        <number>0</number>
        </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -541,7 +568,7 @@
         <string>B</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_7">
+      <widget class="QPlainTextEdit" name="edMaxAzulR">
        <property name="geometry">
         <rect>
          <x>928</x>
@@ -558,11 +585,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_8">
+      <widget class="QPlainTextEdit" name="edMinAzulR">
        <property name="geometry">
         <rect>
          <x>928</x>
@@ -579,11 +609,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_9">
+      <widget class="QPlainTextEdit" name="edMaxAzulG">
        <property name="geometry">
         <rect>
          <x>964</x>
@@ -600,11 +633,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_10">
+      <widget class="QPlainTextEdit" name="edMinAzulG">
        <property name="geometry">
         <rect>
          <x>964</x>
@@ -621,11 +657,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_11">
+      <widget class="QPlainTextEdit" name="edMaxAzulB">
        <property name="geometry">
         <rect>
          <x>1000</x>
@@ -642,11 +681,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_12">
+      <widget class="QPlainTextEdit" name="edMinAzulB">
        <property name="geometry">
         <rect>
          <x>1000</x>
@@ -663,11 +705,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_13">
+      <widget class="QPlainTextEdit" name="edMaxAmaG">
        <property name="geometry">
         <rect>
          <x>966</x>
@@ -684,11 +729,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_14">
+      <widget class="QPlainTextEdit" name="edMinAmaB">
        <property name="geometry">
         <rect>
          <x>1002</x>
@@ -705,11 +753,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_15">
+      <widget class="QPlainTextEdit" name="edMinAmaR">
        <property name="geometry">
         <rect>
          <x>930</x>
@@ -726,11 +777,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_16">
+      <widget class="QPlainTextEdit" name="edMinAmaG">
        <property name="geometry">
         <rect>
          <x>966</x>
@@ -747,11 +801,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_17">
+      <widget class="QPlainTextEdit" name="edMaxAmaR">
        <property name="geometry">
         <rect>
          <x>930</x>
@@ -767,6 +824,9 @@
        </property>
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
        <property name="plainText">
         <string>0</string>
@@ -792,7 +852,7 @@
         <string>Amarelo</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_18">
+      <widget class="QPlainTextEdit" name="edMaxAmaB">
        <property name="geometry">
         <rect>
          <x>1002</x>
@@ -809,11 +869,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_19">
+      <widget class="QPlainTextEdit" name="edMaxVerG">
        <property name="geometry">
         <rect>
          <x>966</x>
@@ -830,11 +893,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_20">
+      <widget class="QPlainTextEdit" name="edMinVerB">
        <property name="geometry">
         <rect>
          <x>1002</x>
@@ -851,11 +917,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_21">
+      <widget class="QPlainTextEdit" name="edMinVerR">
        <property name="geometry">
         <rect>
          <x>930</x>
@@ -872,11 +941,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_22">
+      <widget class="QPlainTextEdit" name="edMinVerG">
        <property name="geometry">
         <rect>
          <x>966</x>
@@ -893,11 +965,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_23">
+      <widget class="QPlainTextEdit" name="edMaxVerR">
        <property name="geometry">
         <rect>
          <x>930</x>
@@ -913,6 +988,9 @@
        </property>
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
        <property name="plainText">
         <string>0</string>
@@ -938,7 +1016,7 @@
         <string>Verde</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_24">
+      <widget class="QPlainTextEdit" name="edMaxVerB">
        <property name="geometry">
         <rect>
          <x>1002</x>
@@ -955,11 +1033,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_25">
+      <widget class="QPlainTextEdit" name="edMinRosaG">
        <property name="geometry">
         <rect>
          <x>966</x>
@@ -976,11 +1057,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_26">
+      <widget class="QPlainTextEdit" name="edMinRosaR">
        <property name="geometry">
         <rect>
          <x>930</x>
@@ -997,11 +1081,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_27">
+      <widget class="QPlainTextEdit" name="edMaxRosaG">
        <property name="geometry">
         <rect>
          <x>966</x>
@@ -1018,11 +1105,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_28">
+      <widget class="QPlainTextEdit" name="edMaxRosaB">
        <property name="geometry">
         <rect>
          <x>1002</x>
@@ -1039,11 +1129,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_29">
+      <widget class="QPlainTextEdit" name="edMinRosaB">
        <property name="geometry">
         <rect>
          <x>1002</x>
@@ -1060,11 +1153,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_30">
+      <widget class="QPlainTextEdit" name="edMaxRosaR">
        <property name="geometry">
         <rect>
          <x>930</x>
@@ -1080,6 +1176,9 @@
        </property>
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
        <property name="plainText">
         <string>0</string>
@@ -1105,7 +1204,7 @@
         <string>Rosa</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_31">
+      <widget class="QPlainTextEdit" name="edMaxLaraB">
        <property name="geometry">
         <rect>
          <x>1002</x>
@@ -1122,11 +1221,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_32">
+      <widget class="QPlainTextEdit" name="edMinLaraB">
        <property name="geometry">
         <rect>
          <x>1002</x>
@@ -1142,6 +1244,9 @@
        </property>
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
        <property name="plainText">
         <string>0</string>
@@ -1167,7 +1272,7 @@
         <string>Laranja</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_33">
+      <widget class="QPlainTextEdit" name="edMaxLaraG">
        <property name="geometry">
         <rect>
          <x>966</x>
@@ -1184,11 +1289,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_34">
+      <widget class="QPlainTextEdit" name="edMaxLaraR">
        <property name="geometry">
         <rect>
          <x>930</x>
@@ -1205,11 +1313,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_35">
+      <widget class="QPlainTextEdit" name="edMinLaraG">
        <property name="geometry">
         <rect>
          <x>966</x>
@@ -1226,11 +1337,14 @@
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
        <property name="plainText">
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit_36">
+      <widget class="QPlainTextEdit" name="edMinLaraR">
        <property name="geometry">
         <rect>
          <x>930</x>
@@ -1246,6 +1360,9 @@
        </property>
        <property name="verticalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
        <property name="plainText">
         <string>0</string>
@@ -1254,10 +1371,10 @@
       <widget class="QPushButton" name="pushButton_4">
        <property name="geometry">
         <rect>
-         <x>940</x>
-         <y>460</y>
-         <width>91</width>
-         <height>23</height>
+         <x>920</x>
+         <y>470</y>
+         <width>121</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="text">
@@ -1267,8 +1384,8 @@
       <widget class="QLabel" name="label_11">
        <property name="geometry">
         <rect>
-         <x>552</x>
-         <y>3</y>
+         <x>550</x>
+         <y>10</y>
          <width>91</width>
          <height>20</height>
         </rect>
