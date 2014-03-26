@@ -5,10 +5,28 @@
 #include <QSlider>
 #include <QMessageBox>
 #include <QPlainTextEdit>
+#include <QThread>
+#include "camera.h"
+
 
 namespace Ui {
-class Principal;
+    class Principal;
 }
+
+class CalibraFrame : public QThread {
+    Q_OBJECT
+private:
+    Camera* webCam;
+
+protected:
+    void run();
+
+public:
+    explicit CalibraFrame(QObject* parent = 0);
+
+signals:
+    void frameToQImage(QImage image);
+};
 
 class Principal : public QWidget
 {
@@ -16,7 +34,10 @@ class Principal : public QWidget
     
 public:
     explicit Principal(QWidget *parent = 0);
-    ~Principal();    
+    ~Principal();
+
+public slots:
+    void processarFramesCalibracao(QImage image);
 
 private slots:
     /* Eventos Visuais */
@@ -32,11 +53,17 @@ private slots:
 
     void on_btnCarregar_clicked();
 
-private:
-    Ui::Principal *ui;
+
+
+private:        
+    Ui::Principal *ui;    
+    CalibraFrame* calibra;
+
     void appendEditValueSlider(QPlainTextEdit* ed, QString value);
     void appendEditValueSlider(QSlider** sliders, QPlainTextEdit** edDestino, int n);
     void appendEditValueEdit(QPlainTextEdit** edOrigem, QPlainTextEdit** edDestino, int n);
 };
+
+
 
 #endif // PRINCIPAL_H

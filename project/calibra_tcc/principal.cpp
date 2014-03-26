@@ -6,10 +6,13 @@ Principal::Principal(QWidget *parent) :
     ui(new Ui::Principal)
 {
     ui->setupUi(this);
+    this->calibra = new CalibraFrame(this);
+    connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
+    this->calibra->start();
 }
 
 Principal::~Principal()
-{
+{    
     delete ui;
 }
 
@@ -143,3 +146,34 @@ void Principal::on_btnCarregar_clicked()
     }
 
 }
+
+CalibraFrame::CalibraFrame(QObject *parent): QThread(parent){}
+
+void CalibraFrame::run()
+{
+    this->webCam = new Camera();
+
+    this->webCam->openCamera(0);
+    if (!this->webCam->isCameraOpen())
+        return;
+
+    while (true)
+    {
+        cv::Mat frame = this->webCam->nextFrame();
+        if (frame.empty())
+            return;
+
+        cv::cvtColor(frame, frame, CV_BGR2RGB);
+        QImage qimgOriginal( frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+
+        emit frameToQImage(qimgOriginal);
+
+        this->msleep(20);
+    }
+}
+
+void Principal::processarFramesCalibracao(QImage image)
+{
+    ui->lbImageCamera->setPixmap(QPixmap::fromImage(image));
+}
+
