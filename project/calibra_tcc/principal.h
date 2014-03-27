@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QPlainTextEdit>
 #include <QThread>
+#include <QMutex>
 #include "camera.h"
 
 
@@ -13,17 +14,23 @@ namespace Ui {
     class Principal;
 }
 
+
 class CalibraFrame : public QThread {
     Q_OBJECT
 private:
     Camera* webCam;
+    bool bStop;
+    QMutex mutexCam;
 
 protected:
     void run();
 
 public:
     explicit CalibraFrame(QObject* parent = 0);
+    ~CalibraFrame();
 
+public slots:
+    void stop();
 signals:
     void frameToQImage(QImage image);
 };
@@ -55,7 +62,9 @@ private slots:
 
 
 
-private:        
+    void on_btnIniciar_clicked();
+
+private:
     Ui::Principal *ui;    
     CalibraFrame* calibra;
 

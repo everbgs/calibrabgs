@@ -1,14 +1,13 @@
 #include "principal.h"
 #include "ui_principal.h"
+#include <stdio.h>
 
 Principal::Principal(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Principal)
 {
     ui->setupUi(this);
-    this->calibra = new CalibraFrame(this);
-    connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
-    this->calibra->start();
+    this->calibra = NULL;
 }
 
 Principal::~Principal()
@@ -16,6 +15,10 @@ Principal::~Principal()
     delete ui;
 }
 
+CalibraFrame::~CalibraFrame()
+{
+    delete this->webCam;
+}
 
 void Principal::on_sliderMaxR_valueChanged(int value){this->appendEditValueSlider(ui->edMaxR, QString::number(value));}
 void Principal::on_sliderMaxG_valueChanged(int value){this->appendEditValueSlider(ui->edMaxG, QString::number(value));}
@@ -147,7 +150,13 @@ void Principal::on_btnCarregar_clicked()
 
 }
 
-CalibraFrame::CalibraFrame(QObject *parent): QThread(parent){}
+CalibraFrame::CalibraFrame(QObject *parent):
+    QThread(parent),
+    webCam(NULL),
+    bStop(false)
+{
+
+}
 
 void CalibraFrame::run()
 {
@@ -159,6 +168,11 @@ void CalibraFrame::run()
 
     while (true)
     {
+        {
+            QMutexLocker locker(&mutexCam);
+            if (this->bStop) break;
+        }
+
         cv::Mat frame = this->webCam->nextFrame();
         if (frame.empty())
             return;
@@ -170,10 +184,40 @@ void CalibraFrame::run()
 
         this->msleep(20);
     }
+
+    delete this->webCam;
+    this->webCam = NULL;
 }
+
+void CalibraFrame::stop()
+{
+    QMutexLocker locker(&mutexCam);
+    this->bStop = true;
+}
+
 
 void Principal::processarFramesCalibracao(QImage image)
 {
     ui->lbImageCamera->setPixmap(QPixmap::fromImage(image));
 }
 
+
+void Principal::on_btnIniciar_clicked()
+{
+    if (ui->btnIniciar->text() == "Parado")
+    {
+        ui->btnIniciar->setText("Iniciar");
+
+        if (this->calibra->isRunning())
+            this->calibra->stop();
+    }
+    else
+    {
+        ui->btnIniciar->setText("Parado");
+
+        delete this->calibra;
+        this->calibra = new CalibraFrame(this);
+        connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
+        this->calibra->start();
+    }
+}
