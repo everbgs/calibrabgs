@@ -21,18 +21,22 @@ HEADERS  += principal.h \
 
 FORMS    += principal.ui
 
+win32 {
+    #Relativo a instalação
 
-INCLUDEPATH += /usr/local/include/opencv
-LIBS += -L/usr/local/lib
-LIBS += -lopencv_core
-LIBS += -lopencv_imgproc
-LIBS += -lopencv_highgui
-LIBS += -lopencv_ml
-LIBS += -lopencv_video
-LIBS += -lopencv_features2d
-LIBS += -lopencv_calib3d
-LIBS += -lopencv_objdetect
-LIBS += -lopencv_contrib
-LIBS += -lopencv_legacy
-LIBS += -lopencv_flann
-LIBS += -lopencv_nonfree
+    INCLUDEPATH += C:\opencv\build\include
+
+    LIBS += C:\opencv\release\install\x64\mingw\bin\libopencv_calib3d248.dll
+    LIBS += C:\opencv\release\install\x64\mingw\bin\libopencv_contrib248.dll
+    LIBS += C:\opencv\release\install\x64\mingw\bin\libopencv_core248.dll
+    LIBS += C:\opencv\release\install\x64\mingw\bin\libopencv_highgui248.dll
+    LIBS += C:\opencv\release\install\x64\mingw\bin\libopencv_imgproc248.dll
+}
+
+unix {
+    INCLUDEPATH += `pkg-config --cflags opencv`
+    LIBS += `pkg-config --libs opencv`
+}
+
+
+
