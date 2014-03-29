@@ -1,6 +1,6 @@
 #include "principal.h"
 #include "ui_principal.h"
-#include <stdio.h>
+
 
 Principal::Principal(QWidget *parent) :
     QWidget(parent),

@@ -12,8 +12,7 @@ class Camera
 {
 
 private:
-    VideoCapture camera;
-    Mat frameAtual;
+    VideoCapture camera;   
 
 public:
     bool isCameraOpen(void);

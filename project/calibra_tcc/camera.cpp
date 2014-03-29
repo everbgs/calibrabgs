@@ -8,8 +8,9 @@ bool Camera::isCameraOpen(void)
 
 Mat Camera::nextFrame(void)
 {
-    this->camera >> this->frameAtual;
-    return this->frameAtual;
+    Mat frame;
+    this->camera >> frame;
+    return frame;
 }
 
 void Camera::openCamera(int device)
