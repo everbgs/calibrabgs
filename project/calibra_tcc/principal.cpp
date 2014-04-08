@@ -8,11 +8,13 @@ Principal::Principal(QWidget *parent) :
 {
     ui->setupUi(this);
     this->calibra = NULL;
+    connect(ui->lbImageCamera, SIGNAL(onMouseDown(int,int)), this, SLOT(doOnMouseDownImage(int,int)));
 }
 
 Principal::~Principal()
 {    
     delete ui;
+
 }
 
 CalibraFrame::~CalibraFrame()
@@ -153,10 +155,8 @@ void Principal::on_btnCarregar_clicked()
 CalibraFrame::CalibraFrame(QObject *parent):
     QThread(parent),
     webCam(NULL),
-    bStop(false)
-{
-
-}
+    bStop(false),
+    visao(true){}
 
 void CalibraFrame::run()
 {
@@ -165,6 +165,8 @@ void CalibraFrame::run()
     this->webCam->openCamera(0);
     if (!this->webCam->isCameraOpen())
         return;
+
+    cv::Mat dst;
 
     while (true)
     {
@@ -177,10 +179,20 @@ void CalibraFrame::run()
         if (frame.empty())
             return;
 
-        cv::cvtColor(frame, frame, CV_BGR2RGB);
-        QImage qimgOriginal( frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+        if (this->visao)
+        {
+            cv::cvtColor(frame, frame, CV_BGR2RGB);
+            QImage qimgOriginal( frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+            emit frameToQImage(qimgOriginal);
+        }
+        else
+        {
+            cv::inRange(frame, cv::Scalar(0,0,175), cv::Scalar(100, 100, 256), dst);
+            cv::GaussianBlur(dst,dst,cv::Size(5,5),1.5);
 
-        emit frameToQImage(qimgOriginal);
+            QImage qimgProcessed(dst.data, dst.cols, dst.rows, dst.step, QImage::Format_Indexed8);
+            emit frameToQImage(qimgProcessed);
+        }
 
         this->msleep(20);
     }
@@ -199,6 +211,19 @@ void CalibraFrame::stop()
 void Principal::processarFramesCalibracao(QImage image)
 {
     ui->lbImageCamera->setPixmap(QPixmap::fromImage(image));
+}
+
+void Principal::doOnMouseDownImage(int x, int y)
+{
+    QImage img = ui->lbImageCamera->pixmap()->toImage();
+    if (!img.isNull())
+    {
+        QRgb rgb = img.pixel(x, y);
+        ui->edRGB->appendPlainText("["+QString::number(x)+", "+QString::number(y)+"] = " +
+                                   "R: " + QString::number(qRed(rgb)).rightJustified(4, ' ') +
+                                   " G: " + QString::number(qGreen(rgb)).rightJustified(4, ' ') +
+                                    " B: " + QString::number(qBlue(rgb)).rightJustified(4, ' '));
+    }
 }
 
 
@@ -220,4 +245,11 @@ void Principal::on_btnIniciar_clicked()
         connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
         this->calibra->start();
     }
+}
+
+void Principal::on_btnMudarVisao_clicked()
+{
+    if (this->calibra)
+        this->calibra->visao = !this->calibra->visao;
+
 }

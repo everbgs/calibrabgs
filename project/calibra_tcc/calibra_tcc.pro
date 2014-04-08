@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         principal.cpp \
-    camera.cpp
+    camera.cpp \
+    cameralabel.cpp
 
 HEADERS  += principal.h \
-    camera.h
+    camera.h \
+    cameralabel.h
 
 FORMS    += principal.ui
 

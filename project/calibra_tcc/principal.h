@@ -20,7 +20,7 @@ class CalibraFrame : public QThread {
 private:
     Camera* webCam;
     bool bStop;
-    QMutex mutexCam;
+    QMutex mutexCam;    
 
 protected:
     void run();
@@ -28,6 +28,7 @@ protected:
 public:
     explicit CalibraFrame(QObject* parent = 0);
     ~CalibraFrame();
+    bool visao;
 
 public slots:
     void stop();
@@ -45,6 +46,7 @@ public:
 
 public slots:
     void processarFramesCalibracao(QImage image);
+    void doOnMouseDownImage(int x, int y);
 
 private slots:
     /* Eventos Visuais */
@@ -63,6 +65,8 @@ private slots:
 
 
     void on_btnIniciar_clicked();
+
+    void on_btnMudarVisao_clicked();
 
 private:
     Ui::Principal *ui;    
