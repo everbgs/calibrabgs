@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         principal.cpp \
     camera.cpp \
-    cameralabel.cpp
+    cameralabel.cpp \
+    calibraframe.cpp
 
 HEADERS  += principal.h \
     camera.h \
-    cameralabel.h
+    cameralabel.h \
+    calibraframe.h
 
 FORMS    += principal.ui
 

@@ -5,36 +5,12 @@
 #include <QSlider>
 #include <QMessageBox>
 #include <QPlainTextEdit>
-#include <QThread>
-#include <QMutex>
 #include "camera.h"
-
+#include "calibraframe.h"
 
 namespace Ui {
     class Principal;
 }
-
-
-class CalibraFrame : public QThread {
-    Q_OBJECT
-private:
-    Camera* webCam;
-    bool bStop;
-    QMutex mutexCam;    
-
-protected:
-    void run();
-
-public:
-    explicit CalibraFrame(QObject* parent = 0);
-    ~CalibraFrame();
-    bool visao;
-
-public slots:
-    void stop();
-signals:
-    void frameToQImage(QImage image);
-};
 
 class Principal : public QWidget
 {
@@ -53,19 +29,12 @@ private slots:
     void on_sliderMaxR_valueChanged(int value);
     void on_sliderMaxG_valueChanged(int value);
     void on_sliderMaxB_valueChanged(int value);
-
     void on_sliderMinR_valueChanged(int value);
     void on_sliderMinG_valueChanged(int value);
     void on_sliderMinB_valueChanged(int value);
-
     void on_cbCor_currentIndexChanged(int index);
-
     void on_btnCarregar_clicked();
-
-
-
     void on_btnIniciar_clicked();
-
     void on_btnMudarVisao_clicked();
 
 private:
