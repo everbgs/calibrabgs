@@ -26,6 +26,10 @@ public:
     explicit CalibraFrame(QObject *parent = 0);
     ~CalibraFrame();
     bool visao;
+    int RMax, RMin;
+    int GMax, GMin;
+    int BMax, BMin;
+
 
 public slots:
     void stop();

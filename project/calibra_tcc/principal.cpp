@@ -6,6 +6,8 @@ Principal::Principal(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Principal)
 {
+    this->ixSlider = 0;
+
     ui->setupUi(this);
     this->calibra = NULL;
     connect(ui->lbImageCamera, SIGNAL(onMouseDown(int,int)), this, SLOT(doOnMouseDownImage(int,int)));
@@ -16,13 +18,56 @@ Principal::~Principal()
     delete ui;
 }
 
-void Principal::on_sliderMaxR_valueChanged(int value){this->appendEditValueSlider(ui->edMaxR, QString::number(value));}
-void Principal::on_sliderMaxG_valueChanged(int value){this->appendEditValueSlider(ui->edMaxG, QString::number(value));}
-void Principal::on_sliderMaxB_valueChanged(int value){this->appendEditValueSlider(ui->edMaxB, QString::number(value));}
+void Principal::changeThreadCalibra(int value, int channel, int range)
+{
+    if (!this->calibra) return;
 
-void Principal::on_sliderMinR_valueChanged(int value){this->appendEditValueSlider(ui->edMinR, QString::number(value));}
-void Principal::on_sliderMinG_valueChanged(int value){this->appendEditValueSlider(ui->edMinG, QString::number(value));}
-void Principal::on_sliderMinB_valueChanged(int value){this->appendEditValueSlider(ui->edMinB, QString::number(value));}
+    //min = 0, max = 1
+    switch (channel)
+    {
+        case 1: range ? this->calibra->RMax = value : this->calibra->RMin = value; break;
+        case 2: range ? this->calibra->GMax = value : this->calibra->GMin = value; break;
+        case 3: range ? this->calibra->BMax = value : this->calibra->BMin = value; break;
+    }
+}
+
+void Principal::on_sliderMaxR_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 1, 1);
+    this->appendEditValueSlider(ui->edMaxR, QString::number(value));
+}
+
+void Principal::on_sliderMaxG_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 2, 1);
+    this->appendEditValueSlider(ui->edMaxG, QString::number(value));
+}
+
+void Principal::on_sliderMaxB_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 3, 1);
+    this->appendEditValueSlider(ui->edMaxB, QString::number(value));
+}
+
+void Principal::on_sliderMinR_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 1, 0);
+
+    this->appendEditValueSlider(ui->edMinR, QString::number(value));
+}
+
+void Principal::on_sliderMinG_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 2, 0);
+
+    this->appendEditValueSlider(ui->edMinG, QString::number(value));
+}
+
+void Principal::on_sliderMinB_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 3, 0);
+    this->appendEditValueSlider(ui->edMinB, QString::number(value));
+}
 
 
 void Principal::appendEditValueSlider(QPlainTextEdit* ed, QString value)
@@ -188,5 +233,18 @@ void Principal::doOnMouseDownImage(int x, int y)
                                    "R: " + QString::number(qRed(rgb)).rightJustified(4, ' ') +
                                    " G: " + QString::number(qGreen(rgb)).rightJustified(4, ' ') +
                                     " B: " + QString::number(qBlue(rgb)).rightJustified(4, ' '));
+        if (this->ixSlider == 0)
+        {
+            ui->sliderMaxR->setValue(qRed(rgb));
+            ui->sliderMaxG->setValue(qGreen(rgb));
+            ui->sliderMaxB->setValue(qBlue(rgb));
+        }
+        else
+        {
+            ui->sliderMinR->setValue(qRed(rgb));
+            ui->sliderMinG->setValue(qGreen(rgb));
+            ui->sliderMinB->setValue(qBlue(rgb));
+        }
+        this->ixSlider = (this->ixSlider + 1) % MAX_SLIDER;
     }
 }

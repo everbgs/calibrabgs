@@ -7,6 +7,7 @@
 #include <QPlainTextEdit>
 #include "camera.h"
 #include "calibraframe.h"
+#define MAX_SLIDER 2
 
 namespace Ui {
     class Principal;
@@ -40,10 +41,12 @@ private slots:
 private:
     Ui::Principal *ui;    
     CalibraFrame* calibra;
+    int ixSlider;
 
     void appendEditValueSlider(QPlainTextEdit* ed, QString value);
     void appendEditValueSlider(QSlider** sliders, QPlainTextEdit** edDestino, int n);
     void appendEditValueEdit(QPlainTextEdit** edOrigem, QPlainTextEdit** edDestino, int n);
+    void changeThreadCalibra(int value, int channel, int range);
 };
 
 
