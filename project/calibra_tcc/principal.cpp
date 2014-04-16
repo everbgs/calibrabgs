@@ -11,6 +11,8 @@ Principal::Principal(QWidget *parent) :
     ui->setupUi(this);
     this->calibra = NULL;
     connect(ui->lbImageCamera, SIGNAL(onMouseDown(int,int)), this, SLOT(doOnMouseDownImage(int,int)));
+
+   // ui->lbImageCamera->setStyleSheet("QLabel { background-color : rgb(0, 0, 255) }");
 }
 
 Principal::~Principal()
@@ -229,21 +231,34 @@ void Principal::doOnMouseDownImage(int x, int y)
     if (!img.isNull())
     {
         QRgb rgb = img.pixel(x, y);
+        /*
         ui->edRGB->appendPlainText("["+QString::number(x)+", "+QString::number(y)+"] = " +
                                    "R: " + QString::number(qRed(rgb)).rightJustified(4, ' ') +
                                    " G: " + QString::number(qGreen(rgb)).rightJustified(4, ' ') +
                                     " B: " + QString::number(qBlue(rgb)).rightJustified(4, ' '));
+                                    */
+
+        QPalette palete;
+
         if (this->ixSlider == 0)
         {
             ui->sliderMaxR->setValue(qRed(rgb));
             ui->sliderMaxG->setValue(qGreen(rgb));
             ui->sliderMaxB->setValue(qBlue(rgb));
+
+            palete.setColor(ui->lbRGBMax->backgroundRole(), rgb);
+            palete.setColor(ui->lbRGBMax->foregroundRole(), rgb);
+            ui->lbRGBMax->setPalette(palete);
         }
         else
         {
             ui->sliderMinR->setValue(qRed(rgb));
             ui->sliderMinG->setValue(qGreen(rgb));
             ui->sliderMinB->setValue(qBlue(rgb));
+
+            palete.setColor(ui->lbRGBMax->backgroundRole(), rgb);
+            palete.setColor(ui->lbRGBMax->foregroundRole(), rgb);
+            ui->lbRGBMin->setPalette(palete);
         }
         this->ixSlider = (this->ixSlider + 1) % MAX_SLIDER;
     }

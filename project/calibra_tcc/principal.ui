@@ -1426,14 +1426,60 @@
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QPlainTextEdit" name="edRGB">
+      <widget class="CameraLabel" name="lbRGBMax">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>100</x>
          <y>500</y>
-         <width>531</width>
-         <height>101</height>
+         <width>141</width>
+         <height>121</height>
         </rect>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <property name="text">
+        <string>RGB MAX</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="CameraLabel" name="lbRGBMin">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>500</y>
+         <width>141</width>
+         <height>121</height>
+        </rect>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <property name="text">
+        <string>RGB MIN</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </widget>
