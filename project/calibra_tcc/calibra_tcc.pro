@@ -16,20 +16,23 @@ SOURCES += main.cpp\
         principal.cpp \
     camera.cpp \
     cameralabel.cpp \
-    calibraframe.cpp
+    calibraframe.cpp \
+    objeto.cpp
 
 HEADERS  += principal.h \
     camera.h \
     cameralabel.h \
-    calibraframe.h
+    calibraframe.h \
+    objeto.h
 
 FORMS    += principal.ui
 
-win32 {
-    #Relativo a instalação
+win32 { #CASO O SISTEMA OPERACIONAL FOR DO TIPO WINDOWS
 
+    #DIRETORIO DOS HEADERS
     INCLUDEPATH += C:\opencv\build\include
 
+    #DIRETORIO DAS RECURSOS A SEREM UTILIZADAS
     LIBS += C:\opencv\release\install\x64\mingw\bin\libopencv_calib3d248.dll
     LIBS += C:\opencv\release\install\x64\mingw\bin\libopencv_contrib248.dll
     LIBS += C:\opencv\release\install\x64\mingw\bin\libopencv_core248.dll
@@ -37,8 +40,12 @@ win32 {
     LIBS += C:\opencv\release\install\x64\mingw\bin\libopencv_imgproc248.dll
 }
 
-unix {
+unix { #CASO O SISTEMA OPERACIONAL FOR DO TIPO LINUX
+
+    #DIRETORIO DOS HEADERS
     INCLUDEPATH += `pkg-config --cflags opencv`
+
+    #DIRETORIO DAS RECURSOS A SEREM UTILIZADAS
     LIBS += `pkg-config --libs opencv`
 }
 

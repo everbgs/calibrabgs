@@ -32,7 +32,7 @@
       <widget class="QPlainTextEdit" name="edMaxR">
        <property name="geometry">
         <rect>
-         <x>552</x>
+         <x>544</x>
          <y>203</y>
          <width>31</width>
          <height>21</height>
@@ -56,7 +56,7 @@
       <widget class="QSlider" name="sliderMaxR">
        <property name="geometry">
         <rect>
-         <x>584</x>
+         <x>576</x>
          <y>70</y>
          <width>20</width>
          <height>380</height>
@@ -72,7 +72,7 @@
       <widget class="QSlider" name="sliderMaxG">
        <property name="geometry">
         <rect>
-         <x>636</x>
+         <x>628</x>
          <y>70</y>
          <width>20</width>
          <height>380</height>
@@ -88,7 +88,7 @@
       <widget class="QSlider" name="sliderMaxB">
        <property name="geometry">
         <rect>
-         <x>689</x>
+         <x>681</x>
          <y>70</y>
          <width>20</width>
          <height>380</height>
@@ -144,7 +144,7 @@
       <widget class="QLabel" name="label_4">
        <property name="geometry">
         <rect>
-         <x>588</x>
+         <x>580</x>
          <y>460</y>
          <width>16</width>
          <height>16</height>
@@ -164,7 +164,7 @@
       <widget class="QLabel" name="label_6">
        <property name="geometry">
         <rect>
-         <x>640</x>
+         <x>632</x>
          <y>460</y>
          <width>16</width>
          <height>16</height>
@@ -184,7 +184,7 @@
       <widget class="QLabel" name="label_7">
        <property name="geometry">
         <rect>
-         <x>694</x>
+         <x>686</x>
          <y>460</y>
          <width>16</width>
          <height>16</height>
@@ -204,7 +204,7 @@
       <widget class="QLabel" name="label_10">
        <property name="geometry">
         <rect>
-         <x>928</x>
+         <x>891</x>
          <y>10</y>
          <width>101</width>
          <height>16</height>
@@ -224,9 +224,9 @@
       <widget class="QComboBox" name="cbCor">
        <property name="geometry">
         <rect>
-         <x>660</x>
+         <x>665</x>
          <y>3</y>
-         <width>111</width>
+         <width>131</width>
          <height>31</height>
         </rect>
        </property>
@@ -265,7 +265,7 @@
       <widget class="QCheckBox" name="checkBox">
        <property name="geometry">
         <rect>
-         <x>928</x>
+         <x>891</x>
          <y>41</y>
          <width>81</width>
          <height>18</height>
@@ -285,8 +285,8 @@
       <widget class="QPushButton" name="btnIniciar">
        <property name="geometry">
         <rect>
-         <x>552</x>
-         <y>570</y>
+         <x>10</x>
+         <y>500</y>
          <width>75</width>
          <height>31</height>
         </rect>
@@ -298,7 +298,7 @@
       <widget class="QPushButton" name="btnCarregar">
        <property name="geometry">
         <rect>
-         <x>700</x>
+         <x>686</x>
          <y>482</y>
          <width>81</width>
          <height>31</height>
@@ -311,20 +311,20 @@
       <widget class="QPushButton" name="pushButton_3">
        <property name="geometry">
         <rect>
-         <x>920</x>
+         <x>900</x>
          <y>430</y>
-         <width>111</width>
+         <width>81</width>
          <height>31</height>
         </rect>
        </property>
        <property name="text">
-        <string>Salvar Arquivo</string>
+        <string>Exportar</string>
        </property>
       </widget>
       <widget class="QPlainTextEdit" name="edMaxG">
        <property name="geometry">
         <rect>
-         <x>604</x>
+         <x>596</x>
          <y>203</y>
          <width>31</width>
          <height>21</height>
@@ -348,7 +348,7 @@
       <widget class="QPlainTextEdit" name="edMaxB">
        <property name="geometry">
         <rect>
-         <x>657</x>
+         <x>649</x>
          <y>203</y>
          <width>31</width>
          <height>21</height>
@@ -372,7 +372,7 @@
       <widget class="QLabel" name="label_8">
        <property name="geometry">
         <rect>
-         <x>806</x>
+         <x>798</x>
          <y>460</y>
          <width>16</width>
          <height>16</height>
@@ -392,7 +392,7 @@
       <widget class="QSlider" name="sliderMinB">
        <property name="geometry">
         <rect>
-         <x>855</x>
+         <x>847</x>
          <y>70</y>
          <width>20</width>
          <height>380</height>
@@ -408,7 +408,7 @@
       <widget class="QSlider" name="sliderMinG">
        <property name="geometry">
         <rect>
-         <x>802</x>
+         <x>794</x>
          <y>70</y>
          <width>20</width>
          <height>380</height>
@@ -424,7 +424,7 @@
       <widget class="QPlainTextEdit" name="edMinG">
        <property name="geometry">
         <rect>
-         <x>770</x>
+         <x>762</x>
          <y>203</y>
          <width>31</width>
          <height>21</height>
@@ -448,7 +448,7 @@
       <widget class="QLabel" name="label_5">
        <property name="geometry">
         <rect>
-         <x>756</x>
+         <x>748</x>
          <y>460</y>
          <width>16</width>
          <height>16</height>
@@ -468,7 +468,7 @@
       <widget class="QPlainTextEdit" name="edMinB">
        <property name="geometry">
         <rect>
-         <x>823</x>
+         <x>815</x>
          <y>203</y>
          <width>31</width>
          <height>21</height>
@@ -492,7 +492,7 @@
       <widget class="QPlainTextEdit" name="edMinR">
        <property name="geometry">
         <rect>
-         <x>718</x>
+         <x>710</x>
          <y>203</y>
          <width>31</width>
          <height>21</height>
@@ -516,7 +516,7 @@
       <widget class="QSlider" name="sliderMinR">
        <property name="geometry">
         <rect>
-         <x>750</x>
+         <x>742</x>
          <y>70</y>
          <width>20</width>
          <height>380</height>
@@ -535,7 +535,7 @@
       <widget class="QLabel" name="label_9">
        <property name="geometry">
         <rect>
-         <x>860</x>
+         <x>852</x>
          <y>460</y>
          <width>16</width>
          <height>16</height>
@@ -555,7 +555,7 @@
       <widget class="QPlainTextEdit" name="edMaxAzulR">
        <property name="geometry">
         <rect>
-         <x>928</x>
+         <x>891</x>
          <y>65</y>
          <width>31</width>
          <height>21</height>
@@ -579,7 +579,7 @@
       <widget class="QPlainTextEdit" name="edMinAzulR">
        <property name="geometry">
         <rect>
-         <x>928</x>
+         <x>891</x>
          <y>91</y>
          <width>31</width>
          <height>21</height>
@@ -603,7 +603,7 @@
       <widget class="QPlainTextEdit" name="edMaxAzulG">
        <property name="geometry">
         <rect>
-         <x>964</x>
+         <x>927</x>
          <y>65</y>
          <width>31</width>
          <height>21</height>
@@ -627,7 +627,7 @@
       <widget class="QPlainTextEdit" name="edMinAzulG">
        <property name="geometry">
         <rect>
-         <x>964</x>
+         <x>927</x>
          <y>91</y>
          <width>31</width>
          <height>21</height>
@@ -651,7 +651,7 @@
       <widget class="QPlainTextEdit" name="edMaxAzulB">
        <property name="geometry">
         <rect>
-         <x>1000</x>
+         <x>963</x>
          <y>65</y>
          <width>31</width>
          <height>21</height>
@@ -675,7 +675,7 @@
       <widget class="QPlainTextEdit" name="edMinAzulB">
        <property name="geometry">
         <rect>
-         <x>1000</x>
+         <x>963</x>
          <y>91</y>
          <width>31</width>
          <height>21</height>
@@ -699,7 +699,7 @@
       <widget class="QPlainTextEdit" name="edMaxAmaG">
        <property name="geometry">
         <rect>
-         <x>966</x>
+         <x>929</x>
          <y>139</y>
          <width>31</width>
          <height>21</height>
@@ -723,7 +723,7 @@
       <widget class="QPlainTextEdit" name="edMinAmaB">
        <property name="geometry">
         <rect>
-         <x>1002</x>
+         <x>965</x>
          <y>165</y>
          <width>31</width>
          <height>21</height>
@@ -747,7 +747,7 @@
       <widget class="QPlainTextEdit" name="edMinAmaR">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>165</y>
          <width>31</width>
          <height>21</height>
@@ -771,7 +771,7 @@
       <widget class="QPlainTextEdit" name="edMinAmaG">
        <property name="geometry">
         <rect>
-         <x>966</x>
+         <x>929</x>
          <y>165</y>
          <width>31</width>
          <height>21</height>
@@ -795,7 +795,7 @@
       <widget class="QPlainTextEdit" name="edMaxAmaR">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>139</y>
          <width>31</width>
          <height>21</height>
@@ -819,7 +819,7 @@
       <widget class="QCheckBox" name="checkBox_2">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>115</y>
          <width>81</width>
          <height>18</height>
@@ -839,7 +839,7 @@
       <widget class="QPlainTextEdit" name="edMaxAmaB">
        <property name="geometry">
         <rect>
-         <x>1002</x>
+         <x>965</x>
          <y>139</y>
          <width>31</width>
          <height>21</height>
@@ -863,7 +863,7 @@
       <widget class="QPlainTextEdit" name="edMaxVerG">
        <property name="geometry">
         <rect>
-         <x>966</x>
+         <x>929</x>
          <y>219</y>
          <width>31</width>
          <height>21</height>
@@ -887,7 +887,7 @@
       <widget class="QPlainTextEdit" name="edMinVerB">
        <property name="geometry">
         <rect>
-         <x>1002</x>
+         <x>965</x>
          <y>245</y>
          <width>31</width>
          <height>21</height>
@@ -911,7 +911,7 @@
       <widget class="QPlainTextEdit" name="edMinVerR">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>245</y>
          <width>31</width>
          <height>21</height>
@@ -935,7 +935,7 @@
       <widget class="QPlainTextEdit" name="edMinVerG">
        <property name="geometry">
         <rect>
-         <x>966</x>
+         <x>929</x>
          <y>245</y>
          <width>31</width>
          <height>21</height>
@@ -959,7 +959,7 @@
       <widget class="QPlainTextEdit" name="edMaxVerR">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>219</y>
          <width>31</width>
          <height>21</height>
@@ -983,7 +983,7 @@
       <widget class="QCheckBox" name="checkBox_3">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>195</y>
          <width>81</width>
          <height>18</height>
@@ -1003,7 +1003,7 @@
       <widget class="QPlainTextEdit" name="edMaxVerB">
        <property name="geometry">
         <rect>
-         <x>1002</x>
+         <x>965</x>
          <y>219</y>
          <width>31</width>
          <height>21</height>
@@ -1027,7 +1027,7 @@
       <widget class="QPlainTextEdit" name="edMinRosaG">
        <property name="geometry">
         <rect>
-         <x>966</x>
+         <x>929</x>
          <y>322</y>
          <width>31</width>
          <height>21</height>
@@ -1051,7 +1051,7 @@
       <widget class="QPlainTextEdit" name="edMinRosaR">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>322</y>
          <width>31</width>
          <height>21</height>
@@ -1075,7 +1075,7 @@
       <widget class="QPlainTextEdit" name="edMaxRosaG">
        <property name="geometry">
         <rect>
-         <x>966</x>
+         <x>929</x>
          <y>296</y>
          <width>31</width>
          <height>21</height>
@@ -1099,7 +1099,7 @@
       <widget class="QPlainTextEdit" name="edMaxRosaB">
        <property name="geometry">
         <rect>
-         <x>1002</x>
+         <x>965</x>
          <y>296</y>
          <width>31</width>
          <height>21</height>
@@ -1123,7 +1123,7 @@
       <widget class="QPlainTextEdit" name="edMinRosaB">
        <property name="geometry">
         <rect>
-         <x>1002</x>
+         <x>965</x>
          <y>322</y>
          <width>31</width>
          <height>21</height>
@@ -1147,7 +1147,7 @@
       <widget class="QPlainTextEdit" name="edMaxRosaR">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>296</y>
          <width>31</width>
          <height>21</height>
@@ -1171,7 +1171,7 @@
       <widget class="QCheckBox" name="checkBox_4">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>272</y>
          <width>81</width>
          <height>18</height>
@@ -1191,7 +1191,7 @@
       <widget class="QPlainTextEdit" name="edMaxLaraB">
        <property name="geometry">
         <rect>
-         <x>1002</x>
+         <x>965</x>
          <y>373</y>
          <width>31</width>
          <height>21</height>
@@ -1215,7 +1215,7 @@
       <widget class="QPlainTextEdit" name="edMinLaraB">
        <property name="geometry">
         <rect>
-         <x>1002</x>
+         <x>965</x>
          <y>399</y>
          <width>31</width>
          <height>21</height>
@@ -1239,7 +1239,7 @@
       <widget class="QCheckBox" name="checkBox_5">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>349</y>
          <width>81</width>
          <height>18</height>
@@ -1259,7 +1259,7 @@
       <widget class="QPlainTextEdit" name="edMaxLaraG">
        <property name="geometry">
         <rect>
-         <x>966</x>
+         <x>929</x>
          <y>373</y>
          <width>31</width>
          <height>21</height>
@@ -1283,7 +1283,7 @@
       <widget class="QPlainTextEdit" name="edMaxLaraR">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>373</y>
          <width>31</width>
          <height>21</height>
@@ -1307,7 +1307,7 @@
       <widget class="QPlainTextEdit" name="edMinLaraG">
        <property name="geometry">
         <rect>
-         <x>966</x>
+         <x>929</x>
          <y>399</y>
          <width>31</width>
          <height>21</height>
@@ -1331,7 +1331,7 @@
       <widget class="QPlainTextEdit" name="edMinLaraR">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>893</x>
          <y>399</y>
          <width>31</width>
          <height>21</height>
@@ -1355,21 +1355,21 @@
       <widget class="QPushButton" name="pushButton_4">
        <property name="geometry">
         <rect>
-         <x>920</x>
+         <x>900</x>
          <y>470</y>
-         <width>121</width>
+         <width>81</width>
          <height>31</height>
         </rect>
        </property>
        <property name="text">
-        <string>Carregar Arquivo</string>
+        <string>Importar</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_11">
        <property name="geometry">
         <rect>
-         <x>559</x>
-         <y>10</y>
+         <x>550</x>
+         <y>8</y>
          <width>91</width>
          <height>20</height>
         </rect>
@@ -1388,8 +1388,8 @@
       <widget class="QPushButton" name="btnMudarVisao">
        <property name="geometry">
         <rect>
-         <x>552</x>
-         <y>530</y>
+         <x>450</x>
+         <y>500</y>
          <width>95</width>
          <height>31</height>
         </rect>
@@ -1429,10 +1429,10 @@
       <widget class="CameraLabel" name="lbRGBMax">
        <property name="geometry">
         <rect>
-         <x>100</x>
-         <y>500</y>
+         <x>112</x>
+         <y>529</y>
          <width>141</width>
-         <height>121</height>
+         <height>91</height>
         </rect>
        </property>
        <property name="mouseTracking">
@@ -1457,10 +1457,10 @@
       <widget class="CameraLabel" name="lbRGBMin">
        <property name="geometry">
         <rect>
-         <x>270</x>
-         <y>500</y>
+         <x>282</x>
+         <y>529</y>
          <width>141</width>
-         <height>121</height>
+         <height>91</height>
         </rect>
        </property>
        <property name="mouseTracking">
@@ -1480,6 +1480,19 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="cbkPerspectiva">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>500</y>
+         <width>111</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Perspectiva</string>
        </property>
       </widget>
      </widget>
