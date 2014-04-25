@@ -262,7 +262,7 @@
         </property>
        </item>
       </widget>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="cbkAzul">
        <property name="geometry">
         <rect>
          <x>891</x>
@@ -308,7 +308,7 @@
         <string>Carregar</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="btnExportar">
        <property name="geometry">
         <rect>
          <x>900</x>
@@ -816,7 +816,7 @@
         <string>0</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_2">
+      <widget class="QCheckBox" name="cbkAmarelo">
        <property name="geometry">
         <rect>
          <x>893</x>
@@ -980,7 +980,7 @@
         <string>0</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_3">
+      <widget class="QCheckBox" name="cbkVerde">
        <property name="geometry">
         <rect>
          <x>893</x>
@@ -1168,7 +1168,7 @@
         <string>0</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_4">
+      <widget class="QCheckBox" name="cbkRosa">
        <property name="geometry">
         <rect>
          <x>893</x>
@@ -1236,7 +1236,10 @@
         <string>0</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_5">
+      <widget class="QCheckBox" name="cbkLaranja">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>893</x>
@@ -1254,6 +1257,15 @@
        </property>
        <property name="text">
         <string>Laranja</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <property name="tristate">
+        <bool>false</bool>
        </property>
       </widget>
       <widget class="QPlainTextEdit" name="edMaxLaraG">

@@ -33,6 +33,7 @@ void Principal::changeThreadCalibra(int value, int channel, int range)
     }
 }
 
+
 void Principal::on_sliderMaxR_valueChanged(int value)
 {
     this->changeThreadCalibra(value, 1, 1);
@@ -261,5 +262,69 @@ void Principal::doOnMouseDownImage(int x, int y)
             ui->lbRGBMin->setPalette(palete);
         }
         this->ixSlider = (this->ixSlider + 1) % MAX_SLIDER;
+    }
+}
+
+_corcalibra Principal::getFormatCorCalibra(QPlainTextEdit** edts)
+{
+    _corcalibra colors;
+
+    colors.maxR = edts[0]->toPlainText().toInt();
+    colors.maxG = edts[1]->toPlainText().toInt();
+    colors.maxB = edts[2]->toPlainText().toInt();
+
+    colors.minR = edts[3]->toPlainText().toInt();
+    colors.minG = edts[4]->toPlainText().toInt();
+    colors.minB = edts[5]->toPlainText().toInt();
+
+    return colors;
+}
+
+
+void Principal::on_btnExportar_clicked()
+{
+    QString dir =  QFileDialog::getSaveFileName(this, "Salvar arquivo", "", "Text files (*.txt)", 0);
+
+    if (dir != "")
+    {
+        Objeto obj;
+
+        if (ui->cbkAzul->isChecked())
+        {
+            QPlainTextEdit* edts[] = {ui->edMaxAzulR, ui->edMaxAzulG, ui->edMaxAzulB,
+                                      ui->edMinAzulR, ui->edMinAzulG, ui->edMinAzulB};
+            obj.setColor(cores::AZUL, this->getFormatCorCalibra(edts));
+        }
+        if (ui->cbkAmarelo->isChecked())
+        {
+            QPlainTextEdit* edts[] = {ui->edMaxAmaR, ui->edMaxAmaG, ui->edMaxAmaB,
+                                      ui->edMinAmaR, ui->edMinAmaG, ui->edMinAmaB};
+            obj.setColor(cores::AMARELO, this->getFormatCorCalibra(edts));
+        }
+        if (ui->cbkVerde->isChecked())
+        {
+            QPlainTextEdit* edts[] = {ui->edMaxVerR, ui->edMaxVerG, ui->edMaxVerB,
+                                      ui->edMinVerR, ui->edMinVerG, ui->edMinVerB};
+            obj.setColor(cores::VERDE, this->getFormatCorCalibra(edts));
+        }
+        if (ui->cbkRosa->isChecked())
+        {
+            QPlainTextEdit* edts[] = {ui->edMaxRosaR, ui->edMaxRosaG, ui->edMaxRosaB,
+                                      ui->edMinRosaR, ui->edMinRosaG, ui->edMinRosaB};
+            obj.setColor(cores::ROSA, this->getFormatCorCalibra(edts));
+        }
+        if (ui->cbkLaranja->isChecked())
+        {
+            QPlainTextEdit* edts[] = {ui->edMaxLaraR, ui->edMaxLaraG, ui->edMaxLaraB,
+                                      ui->edMinLaraR, ui->edMinLaraG, ui->edMinLaraB};
+            obj.setColor(cores::LARANJA, this->getFormatCorCalibra(edts));
+        }
+
+        try
+        {
+            obj.exportarArquivo(dir.toStdString());
+        }catch(const char* msg){
+            QMessageBox::information(this, "Exportar Arquivo", msg);
+        }
     }
 }
