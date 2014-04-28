@@ -42,6 +42,10 @@ private slots:
 
     void on_btnExportar_clicked();
 
+    void on_btnImportar_clicked();
+
+    void on_btnAppend_clicked();
+
 private:
     Ui::Principal *ui;    
     CalibraFrame* calibra;
@@ -52,6 +56,9 @@ private:
     void appendEditValueEdit(QPlainTextEdit** edOrigem, QPlainTextEdit** edDestino, int n);
     void changeThreadCalibra(int value, int channel, int range);
     _corcalibra getFormatCorCalibra(QPlainTextEdit** edts);
+    void appendEditValueImport(QPlainTextEdit** edts, _corcalibra rgbCor);
+
+
 };
 
 

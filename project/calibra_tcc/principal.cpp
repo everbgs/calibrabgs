@@ -55,14 +55,12 @@ void Principal::on_sliderMaxB_valueChanged(int value)
 void Principal::on_sliderMinR_valueChanged(int value)
 {
     this->changeThreadCalibra(value, 1, 0);
-
     this->appendEditValueSlider(ui->edMinR, QString::number(value));
 }
 
 void Principal::on_sliderMinG_valueChanged(int value)
 {
     this->changeThreadCalibra(value, 2, 0);
-
     this->appendEditValueSlider(ui->edMinG, QString::number(value));
 }
 
@@ -268,16 +266,15 @@ void Principal::doOnMouseDownImage(int x, int y)
 _corcalibra Principal::getFormatCorCalibra(QPlainTextEdit** edts)
 {
     _corcalibra colors;
-
-    colors.maxR = edts[0]->toPlainText().toInt();
-    colors.maxG = edts[1]->toPlainText().toInt();
-    colors.maxB = edts[2]->toPlainText().toInt();
-
-    colors.minR = edts[3]->toPlainText().toInt();
-    colors.minG = edts[4]->toPlainText().toInt();
-    colors.minB = edts[5]->toPlainText().toInt();
-
+    for (int i=0; i<6; i++)
+        colors._cores[i] = edts[i]->toPlainText().toInt();
     return colors;
+}
+
+void Principal::appendEditValueImport(QPlainTextEdit **edts, _corcalibra rgbCor)
+{
+    for (int i=0; i<6; i++)
+        this->appendEditValueSlider(edts[i], QString::number(rgbCor._cores[i]));
 }
 
 
@@ -327,4 +324,68 @@ void Principal::on_btnExportar_clicked()
             QMessageBox::information(this, "Exportar Arquivo", msg);
         }
     }
+}
+
+void Principal::on_btnImportar_clicked()
+{
+    QString dir =  QFileDialog::getOpenFileName(this, "Salvar arquivo", "", "Text files (*.txt)",0);
+    if (dir != "")
+    {
+        Objeto obj;
+        try
+        {
+
+            obj.importarArquivo(dir.toStdString());
+            if (obj.isColor(cores::AZUL))
+            {
+                QPlainTextEdit* edts[] = {ui->edMaxAzulR, ui->edMaxAzulG, ui->edMaxAzulB,
+                                          ui->edMinAzulR, ui->edMinAzulG, ui->edMinAzulB};
+                this->appendEditValueImport(edts, obj.getColor(cores::AZUL));
+            }
+            if (obj.isColor(cores::AMARELO))
+            {
+                QPlainTextEdit* edts[] = {ui->edMaxAmaR, ui->edMaxAmaG, ui->edMaxAmaB,
+                                          ui->edMinAmaR, ui->edMinAmaG, ui->edMinAmaB};
+                this->appendEditValueImport(edts, obj.getColor(cores::AMARELO));
+            }
+            if (obj.isColor(cores::VERDE))
+            {
+                QPlainTextEdit* edts[] = {ui->edMaxVerR, ui->edMaxVerG, ui->edMaxVerB,
+                                          ui->edMinVerR, ui->edMinVerG, ui->edMinVerB};
+                this->appendEditValueImport(edts, obj.getColor(cores::VERDE));
+            }
+            if (obj.isColor(cores::ROSA))
+            {
+                QPlainTextEdit* edts[] = {ui->edMaxRosaR, ui->edMaxRosaG, ui->edMaxRosaB,
+                                          ui->edMinRosaR, ui->edMinRosaG, ui->edMinRosaB};
+                this->appendEditValueImport(edts, obj.getColor(cores::ROSA));
+            }
+            if (obj.isColor(cores::LARANJA))
+            {
+                QPlainTextEdit* edts[] = {ui->edMaxLaraR, ui->edMaxLaraG, ui->edMaxLaraB,
+                                          ui->edMinLaraR, ui->edMinLaraG, ui->edMinLaraB};
+                this->appendEditValueImport(edts, obj.getColor(cores::LARANJA));
+            }
+
+        }catch(const char* msg){
+            QMessageBox::information(this, "Importar Arquivo", msg);
+        }
+    }
+}
+
+void Principal::on_btnAppend_clicked()
+{
+
+    QRgb rgb;
+    QPalette palete;
+
+    rgb = qRgb(ui->sliderMaxR->value(), ui->sliderMaxG->value(), ui->sliderMaxB->value());
+    palete.setColor(ui->lbRGBMax->backgroundRole(), rgb);
+    palete.setColor(ui->lbRGBMax->foregroundRole(), rgb);
+    ui->lbRGBMax->setPalette(palete);
+
+    rgb = qRgb(ui->sliderMinR->value(), ui->sliderMinG->value(), ui->sliderMinB->value());
+    palete.setColor(ui->lbRGBMin->backgroundRole(), rgb);
+    palete.setColor(ui->lbRGBMin->foregroundRole(), rgb);
+    ui->lbRGBMin->setPalette(palete);
 }

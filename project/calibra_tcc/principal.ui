@@ -1364,7 +1364,7 @@
         <string>0</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="btnImportar">
        <property name="geometry">
         <rect>
          <x>900</x>
@@ -1505,6 +1505,19 @@
        </property>
        <property name="text">
         <string>Perspectiva</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnAppend">
+       <property name="geometry">
+        <rect>
+         <x>680</x>
+         <y>520</y>
+         <width>95</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Append RGB</string>
        </property>
       </widget>
      </widget>

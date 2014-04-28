@@ -4,7 +4,9 @@
 #include <iostream>
 #include <map>
 #include <fstream>
+#include <sstream>
 #include <string>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -17,8 +19,7 @@ namespace cores {
 }
 
 struct _corcalibra {
-    int maxR, maxG, maxB;
-    int minR, minG, minB;
+    int _cores[6]; //MAX: 0..2, MIN: 3..5
 };
 
 class Objeto
@@ -26,10 +27,6 @@ class Objeto
 
 private:
     map<string, _corcalibra> mapaCores;
-
-    ofstream arquivo;
-    string nameArq;
-    string caminho;
 public:
     Objeto();
 
@@ -39,6 +36,10 @@ public:
     void importarArquivo(string dir);
 
     void setColor(string nameCor, _corcalibra range);
+    _corcalibra getColor(string nameCor);
+
+    bool isColor(string cor);
+
 };
 
 #endif // OBJETO_H

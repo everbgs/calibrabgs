@@ -51,7 +51,7 @@ void CalibraFrame::run()
         {
             /*Max = claro, min = escuro*/
             cv::inRange(frame, cv::Scalar(BMin, GMin, RMin), cv::Scalar(BMax, GMax, RMax), dst);
-            cv::GaussianBlur(dst,dst,cv::Size(5,5),1.5);
+            cv::GaussianBlur(dst,dst,cv::Size(9,9), 2,2);
 
             QImage qimgProcessed(dst.data, dst.cols, dst.rows, dst.step, QImage::Format_Indexed8);
             emit frameToQImage(qimgProcessed);
