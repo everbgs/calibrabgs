@@ -4,15 +4,13 @@
 
 Principal::Principal(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Principal)
-{
-    this->ixSlider = 0;
+    ui(new Ui::Principal){
+
+    this->calibraClick = false;
 
     ui->setupUi(this);
     this->calibra = NULL;
     connect(ui->lbImageCamera, SIGNAL(onMouseDown(int,int)), this, SLOT(doOnMouseDownImage(int,int)));
-
-   // ui->lbImageCamera->setStyleSheet("QLabel { background-color : rgb(0, 0, 255) }");
 }
 
 Principal::~Principal()
@@ -37,36 +35,42 @@ void Principal::changeThreadCalibra(int value, int channel, int range)
 void Principal::on_sliderMaxR_valueChanged(int value)
 {
     this->changeThreadCalibra(value, 1, 1);
+    this->appendPerspectivaSlider(1);
     this->appendEditValueSlider(ui->edMaxR, QString::number(value));
 }
 
 void Principal::on_sliderMaxG_valueChanged(int value)
 {
     this->changeThreadCalibra(value, 2, 1);
+    this->appendPerspectivaSlider(1);
     this->appendEditValueSlider(ui->edMaxG, QString::number(value));
 }
 
 void Principal::on_sliderMaxB_valueChanged(int value)
 {
     this->changeThreadCalibra(value, 3, 1);
+    this->appendPerspectivaSlider(1);
     this->appendEditValueSlider(ui->edMaxB, QString::number(value));
 }
 
 void Principal::on_sliderMinR_valueChanged(int value)
 {
     this->changeThreadCalibra(value, 1, 0);
+    this->appendPerspectivaSlider(0);
     this->appendEditValueSlider(ui->edMinR, QString::number(value));
 }
 
 void Principal::on_sliderMinG_valueChanged(int value)
 {
     this->changeThreadCalibra(value, 2, 0);
+    this->appendPerspectivaSlider(0);
     this->appendEditValueSlider(ui->edMinG, QString::number(value));
 }
 
 void Principal::on_sliderMinB_valueChanged(int value)
 {
     this->changeThreadCalibra(value, 3, 0);
+    this->appendPerspectivaSlider(0);
     this->appendEditValueSlider(ui->edMinB, QString::number(value));
 }
 
@@ -226,41 +230,39 @@ void Principal::processarFramesCalibracao(QImage image)
 
 void Principal::doOnMouseDownImage(int x, int y)
 {
+    if (!ui->gbPerspectiva->isChecked())
+        return;
+
+    this->calibraClick = true;
+
     QImage img = ui->lbImageCamera->pixmap()->toImage();
     if (!img.isNull())
     {
-        QRgb rgb = img.pixel(x, y);
-        /*
-        ui->edRGB->appendPlainText("["+QString::number(x)+", "+QString::number(y)+"] = " +
-                                   "R: " + QString::number(qRed(rgb)).rightJustified(4, ' ') +
-                                   " G: " + QString::number(qGreen(rgb)).rightJustified(4, ' ') +
-                                    " B: " + QString::number(qBlue(rgb)).rightJustified(4, ' '));
-                                    */
-
+        QRgb rgb = img.pixel(x, y);   
         QPalette palete;
 
-        if (this->ixSlider == 0)
+        if (ui->rbRGBMax->isChecked())
         {
             ui->sliderMaxR->setValue(qRed(rgb));
             ui->sliderMaxG->setValue(qGreen(rgb));
             ui->sliderMaxB->setValue(qBlue(rgb));
 
-            palete.setColor(ui->lbRGBMax->backgroundRole(), rgb);
-            palete.setColor(ui->lbRGBMax->foregroundRole(), rgb);
-            ui->lbRGBMax->setPalette(palete);
+            palete.setColor(ui->lbRGBPers->backgroundRole(), rgb);
+            palete.setColor(ui->lbRGBPers->foregroundRole(), rgb);
+            ui->lbRGBPers->setPalette(palete);
         }
-        else
+        else if (ui->rbRGBMin->isChecked())
         {
             ui->sliderMinR->setValue(qRed(rgb));
             ui->sliderMinG->setValue(qGreen(rgb));
             ui->sliderMinB->setValue(qBlue(rgb));
 
-            palete.setColor(ui->lbRGBMax->backgroundRole(), rgb);
-            palete.setColor(ui->lbRGBMax->foregroundRole(), rgb);
-            ui->lbRGBMin->setPalette(palete);
+            palete.setColor(ui->lbRGBPers->backgroundRole(), rgb);
+            palete.setColor(ui->lbRGBPers->foregroundRole(), rgb);
+            ui->lbRGBPers->setPalette(palete);
         }
-        this->ixSlider = (this->ixSlider + 1) % MAX_SLIDER;
     }
+    this->calibraClick = false;
 }
 
 _corcalibra Principal::getFormatCorCalibra(QPlainTextEdit** edts)
@@ -373,19 +375,26 @@ void Principal::on_btnImportar_clicked()
     }
 }
 
-void Principal::on_btnAppend_clicked()
+void Principal::appendPerspectivaSlider(int op)
 {
+    if ((this->calibraClick)||(!ui->gbPerspectiva->isChecked()) ) return;
 
     QRgb rgb;
     QPalette palete;
 
-    rgb = qRgb(ui->sliderMaxR->value(), ui->sliderMaxG->value(), ui->sliderMaxB->value());
-    palete.setColor(ui->lbRGBMax->backgroundRole(), rgb);
-    palete.setColor(ui->lbRGBMax->foregroundRole(), rgb);
-    ui->lbRGBMax->setPalette(palete);
-
-    rgb = qRgb(ui->sliderMinR->value(), ui->sliderMinG->value(), ui->sliderMinB->value());
-    palete.setColor(ui->lbRGBMin->backgroundRole(), rgb);
-    palete.setColor(ui->lbRGBMin->foregroundRole(), rgb);
-    ui->lbRGBMin->setPalette(palete);
+    //op: 1 - MAX, 0 - MIN
+    if ((op == 1)&&(ui->rbRGBMax->isChecked()))
+    {
+        rgb = qRgb(ui->sliderMaxR->value(), ui->sliderMaxG->value(), ui->sliderMaxB->value());
+        palete.setColor(ui->lbRGBPers->backgroundRole(), rgb);
+        palete.setColor(ui->lbRGBPers->foregroundRole(), rgb);
+        ui->lbRGBPers->setPalette(palete);
+    }
+    else if ((!op)&&(ui->rbRGBMin->isChecked()))
+    {
+        rgb = qRgb(ui->sliderMinR->value(), ui->sliderMinG->value(), ui->sliderMinB->value());
+        palete.setColor(ui->lbRGBPers->backgroundRole(), rgb);
+        palete.setColor(ui->lbRGBPers->foregroundRole(), rgb);
+        ui->lbRGBPers->setPalette(palete);
+    }
 }

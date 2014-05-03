@@ -1438,87 +1438,96 @@
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="CameraLabel" name="lbRGBMax">
+      <widget class="QGroupBox" name="gbPerspectiva">
        <property name="geometry">
         <rect>
-         <x>112</x>
-         <y>529</y>
-         <width>141</width>
-         <height>91</height>
-        </rect>
-       </property>
-       <property name="mouseTracking">
-        <bool>true</bool>
-       </property>
-       <property name="autoFillBackground">
-        <bool>true</bool>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <property name="text">
-        <string>RGB MAX</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-      <widget class="CameraLabel" name="lbRGBMin">
-       <property name="geometry">
-        <rect>
-         <x>282</x>
-         <y>529</y>
-         <width>141</width>
-         <height>91</height>
-        </rect>
-       </property>
-       <property name="mouseTracking">
-        <bool>true</bool>
-       </property>
-       <property name="autoFillBackground">
-        <bool>true</bool>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <property name="text">
-        <string>RGB MIN</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="cbkPerspectiva">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
+         <x>130</x>
          <y>500</y>
-         <width>111</width>
-         <height>26</height>
+         <width>311</width>
+         <height>131</height>
         </rect>
        </property>
-       <property name="text">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="title">
         <string>Perspectiva</string>
        </property>
-      </widget>
-      <widget class="QPushButton" name="btnAppend">
-       <property name="geometry">
-        <rect>
-         <x>680</x>
-         <y>520</y>
-         <width>95</width>
-         <height>31</height>
-        </rect>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
        </property>
-       <property name="text">
-        <string>Append RGB</string>
+       <property name="flat">
+        <bool>false</bool>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <widget class="QRadioButton" name="rbRGBMin">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>80</y>
+          <width>108</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>RGB MIN</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QRadioButton" name="rbRGBMax">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>40</y>
+          <width>108</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>RGB MAX</string>
+        </property>
+       </widget>
+       <widget class="CameraLabel" name="lbRGBPers">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>30</y>
+          <width>141</width>
+          <height>91</height>
+         </rect>
+        </property>
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+        <property name="autoFillBackground">
+         <bool>true</bool>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
+        </property>
+        <property name="text">
+         <string>RGB</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
       </widget>
      </widget>
     </widget>

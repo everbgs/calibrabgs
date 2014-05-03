@@ -9,7 +9,6 @@
 #include "calibraframe.h"
 #include "objeto.h"
 #include <QFileDialog>
-#define MAX_SLIDER 2
 
 namespace Ui {
     class Principal;
@@ -44,12 +43,11 @@ private slots:
 
     void on_btnImportar_clicked();
 
-    void on_btnAppend_clicked();
 
 private:
     Ui::Principal *ui;    
     CalibraFrame* calibra;
-    int ixSlider;
+    bool calibraClick;
 
     void appendEditValueSlider(QPlainTextEdit* ed, QString value);
     void appendEditValueSlider(QSlider** sliders, QPlainTextEdit** edDestino, int n);
@@ -57,8 +55,7 @@ private:
     void changeThreadCalibra(int value, int channel, int range);
     _corcalibra getFormatCorCalibra(QPlainTextEdit** edts);
     void appendEditValueImport(QPlainTextEdit** edts, _corcalibra rgbCor);
-
-
+    void appendPerspectivaSlider(int op);
 };
 
 
