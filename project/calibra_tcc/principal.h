@@ -7,6 +7,8 @@
 #include <QPlainTextEdit>
 #include "camera.h"
 #include "calibraframe.h"
+#include "objeto.h"
+#include <QFileDialog>
 
 namespace Ui {
     class Principal;
@@ -37,13 +39,23 @@ private slots:
     void on_btnIniciar_clicked();
     void on_btnMudarVisao_clicked();
 
+    void on_btnExportar_clicked();
+
+    void on_btnImportar_clicked();
+
+
 private:
     Ui::Principal *ui;    
     CalibraFrame* calibra;
+    bool calibraClick;
 
     void appendEditValueSlider(QPlainTextEdit* ed, QString value);
     void appendEditValueSlider(QSlider** sliders, QPlainTextEdit** edDestino, int n);
     void appendEditValueEdit(QPlainTextEdit** edOrigem, QPlainTextEdit** edDestino, int n);
+    void changeThreadCalibra(int value, int channel, int range);
+    _corcalibra getFormatCorCalibra(QPlainTextEdit** edts);
+    void appendEditValueImport(QPlainTextEdit** edts, _corcalibra rgbCor);
+    void appendPerspectivaSlider(int op);
 };
 
 

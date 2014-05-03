@@ -4,8 +4,10 @@
 
 Principal::Principal(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Principal)
-{
+    ui(new Ui::Principal){
+
+    this->calibraClick = false;
+
     ui->setupUi(this);
     this->calibra = NULL;
     connect(ui->lbImageCamera, SIGNAL(onMouseDown(int,int)), this, SLOT(doOnMouseDownImage(int,int)));
@@ -16,13 +18,61 @@ Principal::~Principal()
     delete ui;
 }
 
-void Principal::on_sliderMaxR_valueChanged(int value){this->appendEditValueSlider(ui->edMaxR, QString::number(value));}
-void Principal::on_sliderMaxG_valueChanged(int value){this->appendEditValueSlider(ui->edMaxG, QString::number(value));}
-void Principal::on_sliderMaxB_valueChanged(int value){this->appendEditValueSlider(ui->edMaxB, QString::number(value));}
+void Principal::changeThreadCalibra(int value, int channel, int range)
+{
+    if (!this->calibra) return;
 
-void Principal::on_sliderMinR_valueChanged(int value){this->appendEditValueSlider(ui->edMinR, QString::number(value));}
-void Principal::on_sliderMinG_valueChanged(int value){this->appendEditValueSlider(ui->edMinG, QString::number(value));}
-void Principal::on_sliderMinB_valueChanged(int value){this->appendEditValueSlider(ui->edMinB, QString::number(value));}
+    //min = 0, max = 1
+    switch (channel)
+    {
+        case 1: range ? this->calibra->RMax = value : this->calibra->RMin = value; break;
+        case 2: range ? this->calibra->GMax = value : this->calibra->GMin = value; break;
+        case 3: range ? this->calibra->BMax = value : this->calibra->BMin = value; break;
+    }
+}
+
+
+void Principal::on_sliderMaxR_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 1, 1);
+    this->appendPerspectivaSlider(1);
+    this->appendEditValueSlider(ui->edMaxR, QString::number(value));
+}
+
+void Principal::on_sliderMaxG_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 2, 1);
+    this->appendPerspectivaSlider(1);
+    this->appendEditValueSlider(ui->edMaxG, QString::number(value));
+}
+
+void Principal::on_sliderMaxB_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 3, 1);
+    this->appendPerspectivaSlider(1);
+    this->appendEditValueSlider(ui->edMaxB, QString::number(value));
+}
+
+void Principal::on_sliderMinR_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 1, 0);
+    this->appendPerspectivaSlider(0);
+    this->appendEditValueSlider(ui->edMinR, QString::number(value));
+}
+
+void Principal::on_sliderMinG_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 2, 0);
+    this->appendPerspectivaSlider(0);
+    this->appendEditValueSlider(ui->edMinG, QString::number(value));
+}
+
+void Principal::on_sliderMinB_valueChanged(int value)
+{
+    this->changeThreadCalibra(value, 3, 0);
+    this->appendPerspectivaSlider(0);
+    this->appendEditValueSlider(ui->edMinB, QString::number(value));
+}
 
 
 void Principal::appendEditValueSlider(QPlainTextEdit* ed, QString value)
@@ -180,13 +230,171 @@ void Principal::processarFramesCalibracao(QImage image)
 
 void Principal::doOnMouseDownImage(int x, int y)
 {
+    if (!ui->gbPerspectiva->isChecked())
+        return;
+
+    this->calibraClick = true;
+
     QImage img = ui->lbImageCamera->pixmap()->toImage();
     if (!img.isNull())
     {
-        QRgb rgb = img.pixel(x, y);
-        ui->edRGB->appendPlainText("["+QString::number(x)+", "+QString::number(y)+"] = " +
-                                   "R: " + QString::number(qRed(rgb)).rightJustified(4, ' ') +
-                                   " G: " + QString::number(qGreen(rgb)).rightJustified(4, ' ') +
-                                    " B: " + QString::number(qBlue(rgb)).rightJustified(4, ' '));
+        QRgb rgb = img.pixel(x, y);   
+        QPalette palete;
+
+        if (ui->rbRGBMax->isChecked())
+        {
+            ui->sliderMaxR->setValue(qRed(rgb));
+            ui->sliderMaxG->setValue(qGreen(rgb));
+            ui->sliderMaxB->setValue(qBlue(rgb));
+
+            palete.setColor(ui->lbRGBPers->backgroundRole(), rgb);
+            palete.setColor(ui->lbRGBPers->foregroundRole(), rgb);
+            ui->lbRGBPers->setPalette(palete);
+        }
+        else if (ui->rbRGBMin->isChecked())
+        {
+            ui->sliderMinR->setValue(qRed(rgb));
+            ui->sliderMinG->setValue(qGreen(rgb));
+            ui->sliderMinB->setValue(qBlue(rgb));
+
+            palete.setColor(ui->lbRGBPers->backgroundRole(), rgb);
+            palete.setColor(ui->lbRGBPers->foregroundRole(), rgb);
+            ui->lbRGBPers->setPalette(palete);
+        }
+    }
+    this->calibraClick = false;
+}
+
+_corcalibra Principal::getFormatCorCalibra(QPlainTextEdit** edts)
+{
+    _corcalibra colors;
+    for (int i=0; i<6; i++)
+        colors._cores[i] = edts[i]->toPlainText().toInt();
+    return colors;
+}
+
+void Principal::appendEditValueImport(QPlainTextEdit **edts, _corcalibra rgbCor)
+{
+    for (int i=0; i<6; i++)
+        this->appendEditValueSlider(edts[i], QString::number(rgbCor._cores[i]));
+}
+
+
+void Principal::on_btnExportar_clicked()
+{
+    QString dir =  QFileDialog::getSaveFileName(this, "Salvar arquivo", "", "Text files (*.txt)", 0);
+
+    if (dir != "")
+    {
+        Objeto obj;
+
+        if (ui->cbkAzul->isChecked())
+        {
+            QPlainTextEdit* edts[] = {ui->edMaxAzulR, ui->edMaxAzulG, ui->edMaxAzulB,
+                                      ui->edMinAzulR, ui->edMinAzulG, ui->edMinAzulB};
+            obj.setColor(cores::AZUL, this->getFormatCorCalibra(edts));
+        }
+        if (ui->cbkAmarelo->isChecked())
+        {
+            QPlainTextEdit* edts[] = {ui->edMaxAmaR, ui->edMaxAmaG, ui->edMaxAmaB,
+                                      ui->edMinAmaR, ui->edMinAmaG, ui->edMinAmaB};
+            obj.setColor(cores::AMARELO, this->getFormatCorCalibra(edts));
+        }
+        if (ui->cbkVerde->isChecked())
+        {
+            QPlainTextEdit* edts[] = {ui->edMaxVerR, ui->edMaxVerG, ui->edMaxVerB,
+                                      ui->edMinVerR, ui->edMinVerG, ui->edMinVerB};
+            obj.setColor(cores::VERDE, this->getFormatCorCalibra(edts));
+        }
+        if (ui->cbkRosa->isChecked())
+        {
+            QPlainTextEdit* edts[] = {ui->edMaxRosaR, ui->edMaxRosaG, ui->edMaxRosaB,
+                                      ui->edMinRosaR, ui->edMinRosaG, ui->edMinRosaB};
+            obj.setColor(cores::ROSA, this->getFormatCorCalibra(edts));
+        }
+        if (ui->cbkLaranja->isChecked())
+        {
+            QPlainTextEdit* edts[] = {ui->edMaxLaraR, ui->edMaxLaraG, ui->edMaxLaraB,
+                                      ui->edMinLaraR, ui->edMinLaraG, ui->edMinLaraB};
+            obj.setColor(cores::LARANJA, this->getFormatCorCalibra(edts));
+        }
+
+        try
+        {
+            obj.exportarArquivo(dir.toStdString());
+        }catch(const char* msg){
+            QMessageBox::information(this, "Exportar Arquivo", msg);
+        }
+    }
+}
+
+void Principal::on_btnImportar_clicked()
+{
+    QString dir =  QFileDialog::getOpenFileName(this, "Salvar arquivo", "", "Text files (*.txt)",0);
+    if (dir != "")
+    {
+        Objeto obj;
+        try
+        {
+
+            obj.importarArquivo(dir.toStdString());
+            if (obj.isColor(cores::AZUL))
+            {
+                QPlainTextEdit* edts[] = {ui->edMaxAzulR, ui->edMaxAzulG, ui->edMaxAzulB,
+                                          ui->edMinAzulR, ui->edMinAzulG, ui->edMinAzulB};
+                this->appendEditValueImport(edts, obj.getColor(cores::AZUL));
+            }
+            if (obj.isColor(cores::AMARELO))
+            {
+                QPlainTextEdit* edts[] = {ui->edMaxAmaR, ui->edMaxAmaG, ui->edMaxAmaB,
+                                          ui->edMinAmaR, ui->edMinAmaG, ui->edMinAmaB};
+                this->appendEditValueImport(edts, obj.getColor(cores::AMARELO));
+            }
+            if (obj.isColor(cores::VERDE))
+            {
+                QPlainTextEdit* edts[] = {ui->edMaxVerR, ui->edMaxVerG, ui->edMaxVerB,
+                                          ui->edMinVerR, ui->edMinVerG, ui->edMinVerB};
+                this->appendEditValueImport(edts, obj.getColor(cores::VERDE));
+            }
+            if (obj.isColor(cores::ROSA))
+            {
+                QPlainTextEdit* edts[] = {ui->edMaxRosaR, ui->edMaxRosaG, ui->edMaxRosaB,
+                                          ui->edMinRosaR, ui->edMinRosaG, ui->edMinRosaB};
+                this->appendEditValueImport(edts, obj.getColor(cores::ROSA));
+            }
+            if (obj.isColor(cores::LARANJA))
+            {
+                QPlainTextEdit* edts[] = {ui->edMaxLaraR, ui->edMaxLaraG, ui->edMaxLaraB,
+                                          ui->edMinLaraR, ui->edMinLaraG, ui->edMinLaraB};
+                this->appendEditValueImport(edts, obj.getColor(cores::LARANJA));
+            }
+
+        }catch(const char* msg){
+            QMessageBox::information(this, "Importar Arquivo", msg);
+        }
+    }
+}
+
+void Principal::appendPerspectivaSlider(int op)
+{
+    if ((this->calibraClick)||(!ui->gbPerspectiva->isChecked()) ) return;
+
+    QRgb rgb;
+    QPalette palete;
+
+    //op: 1 - MAX, 0 - MIN
+    if ((op == 1)&&(ui->rbRGBMax->isChecked()))
+    {
+        rgb = qRgb(ui->sliderMaxR->value(), ui->sliderMaxG->value(), ui->sliderMaxB->value());
+        palete.setColor(ui->lbRGBPers->backgroundRole(), rgb);
+        palete.setColor(ui->lbRGBPers->foregroundRole(), rgb);
+        ui->lbRGBPers->setPalette(palete);
+    }
+    else if ((!op)&&(ui->rbRGBMin->isChecked()))
+    {
+        rgb = qRgb(ui->sliderMinR->value(), ui->sliderMinG->value(), ui->sliderMinB->value());
+        palete.setColor(ui->lbRGBPers->backgroundRole(), rgb);
+        palete.setColor(ui->lbRGBPers->foregroundRole(), rgb);
+        ui->lbRGBPers->setPalette(palete);
     }
 }

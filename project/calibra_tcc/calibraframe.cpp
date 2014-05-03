@@ -2,10 +2,17 @@
 
 CalibraFrame::CalibraFrame(QObject *parent) :
     QThread(parent),
-    webCam(NULL),
-    bStop(false),
-    visao(true)
+    webCam(NULL)
 {
+    this->visao = true;
+    this->bStop = false;
+
+    this->RMax = 0;
+    this->RMin = 0;
+    this->GMax = 0;
+    this->GMin = 0;
+    this->BMax = 0;
+    this->BMin = 0;
 }
 
 CalibraFrame::~CalibraFrame()
@@ -42,8 +49,9 @@ void CalibraFrame::run()
         }
         else
         {
-            cv::inRange(frame, cv::Scalar(0,0,175), cv::Scalar(100, 100, 256), dst);
-            cv::GaussianBlur(dst,dst,cv::Size(5,5),1.5);
+            /*Max = claro, min = escuro*/
+            cv::inRange(frame, cv::Scalar(BMin, GMin, RMin), cv::Scalar(BMax, GMax, RMax), dst);
+            cv::GaussianBlur(dst,dst,cv::Size(9,9), 2,2);
 
             QImage qimgProcessed(dst.data, dst.cols, dst.rows, dst.step, QImage::Format_Indexed8);
             emit frameToQImage(qimgProcessed);
