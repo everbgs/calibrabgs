@@ -20,6 +20,8 @@ public:
 	void setDispositivo(int d);
 	void setDispositivo(string s);
 	void gravarVideoAVI(void);
+	void gravarVideoMovimento(void);
+
 };
 
 void Filmadora::setDispositivo(int d){this->disp = d;}
@@ -71,6 +73,84 @@ void Filmadora::gravarVideoAVI(void)
 	destroyWindow("Camera");
 }
 
+
+void Filmadora::gravarVideoMovimento(void)
+{
+	this->camera.release();
+	this->abrirCamera();	
+
+	if (!this->camera.isOpened())
+		throw "Erro ao abrir camera para captura";
+	
+    namedWindow ("Camera", CV_WINDOW_AUTOSIZE);         
+    //namedWindow ("Camera2", CV_WINDOW_AUTOSIZE);         
+
+	Mat frame, frameAnt; 	
+	CvPoint minVal, maxVal;
+
+	double width = this->camera.get(CV_CAP_PROP_FRAME_WIDTH);
+    double height = this->camera.get(CV_CAP_PROP_FRAME_HEIGHT);
+	VideoWriter video("mov.avi", CV_FOURCC('D','I','V','3'), 20, cvSize((int)width, (int)height));
+    if(!video.isOpened())
+		throw "Não foi possivel criar o video capturado";
+
+	
+	this->camera >> frameAnt; 			
+	if (frameAnt.empty()) throw "Erro ao capturar frame";
+	waitKey(20); 
+
+	double val;
+
+	while(true)
+    {
+        this->camera >> frame; 		
+		
+        if(frame.empty()) throw "Erro ao capturar frame";  
+
+		blur(frame, frame, cv::Size(3,3));
+
+		minVal.x = frame.size().width;
+        minVal.y = frame.size().height;
+        maxVal.x = 0;
+        maxVal.y = 0;
+
+		for (int i=0; i<frame.rows; i++)
+		{
+			for (int l=0; l<frame.cols; l++)		
+			{
+				val = (abs(frame.at<cv::Vec3b>(i,l)[0] - frameAnt.at<cv::Vec3b>(i,l)[0]) +
+					  abs(frame.at<cv::Vec3b>(i,l)[1] - frameAnt.at<cv::Vec3b>(i,l)[1]) +
+					  abs(frame.at<cv::Vec3b>(i,l)[2] - frameAnt.at<cv::Vec3b>(i,l)[2])) / 3;
+				if (val > 35)
+				{
+					if(l<minVal.y)
+		                minVal.y = l;
+		            if(i<minVal.x)
+		                minVal.x = i;
+		            if(l>maxVal.y)
+		                maxVal.y = l;
+		            if(i>maxVal.x)
+		                maxVal.x = i;
+				}
+			}
+		}	
+	
+	    frameAnt = frame.clone();
+		if (maxVal.x || maxVal.y)
+		{
+			video << frame;
+			rectangle(frame, minVal, maxVal, cv::Scalar(0,0,255), 1, 8, 0);		
+		}
+	
+        imshow("Camera", frame);
+        //imshow("Camera2", frameAnt);
+		char c = waitKey(20); 
+		
+        if(c == 27) break;
+    }
+	destroyWindow("Camera");
+}
+
 void cls(void);
 
 int main()
@@ -89,8 +169,8 @@ int main()
 		scanf("%d", &op);
 		switch(op)
 		{
-			case 1:
-				film.gravarVideoAVI();				
+			case 3:
+				film.gravarVideoMovimento();				
 				break;				
 		}
 	//	cls();
