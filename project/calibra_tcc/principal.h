@@ -23,7 +23,7 @@ public:
     ~Principal();
 
 public slots:
-    void processarFramesCalibracao(QImage frame);
+    void processarFramesCalibracao(QImage frame, bool frameColor);
     void doOnMouseDownImage(int x, int y);
 
 private slots:
@@ -43,6 +43,9 @@ private slots:
 
     void on_btnImportar_clicked();
 
+    void on_rbRGBMax_clicked();
+
+    void on_rbRGBMin_clicked();
 
 private:
     Ui::Principal *ui;    

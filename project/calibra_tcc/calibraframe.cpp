@@ -45,7 +45,7 @@ void CalibraFrame::run()
         {
             cv::cvtColor(frame, frame, CV_BGR2RGB);
             QImage qimgOriginal((const unsigned char*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
-            emit frameToQImage(qimgOriginal);
+            emit frameToQImage(qimgOriginal, true);
         }
         else
         {
@@ -54,7 +54,7 @@ void CalibraFrame::run()
             cv::GaussianBlur(dst,dst,cv::Size(9,9), 2,2);
 
             QImage qimgProcessed(dst.data, dst.cols, dst.rows, dst.step, QImage::Format_Indexed8);
-            emit frameToQImage(qimgProcessed);
+            emit frameToQImage(qimgProcessed, false);
         }
 
         this->msleep(20);

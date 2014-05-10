@@ -34,7 +34,7 @@ public:
 public slots:
     void stop();
 signals:
-    void frameToQImage(QImage image);
+    void frameToQImage(QImage image, bool imageColor);
 };
 
 #endif // CALIBRAFRAME_H

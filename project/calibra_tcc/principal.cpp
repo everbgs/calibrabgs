@@ -211,7 +211,7 @@ void Principal::on_btnIniciar_clicked()
 
         delete this->calibra;
         this->calibra = new CalibraFrame(this);
-        connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
+        connect(this->calibra, SIGNAL(frameToQImage(QImage, bool)), this, SLOT(processarFramesCalibracao(QImage, bool)));
         this->calibra->start();
     }
 }
@@ -223,15 +223,21 @@ void Principal::on_btnMudarVisao_clicked()
 
 }
 
-void Principal::processarFramesCalibracao(QImage frame)
+void Principal::processarFramesCalibracao(QImage frame, bool frameColor)
 {
     if (!frame.isNull())
-    {
+    {        
         /* Qt::SmoothTransformation = A imagem resultante é transformado usando a filtragem bilinear.
          * Qt::FastTransformation   = A transformação é realizada de forma rápida, sem suavização.*/
+         Qt::TransformationMode transMode;
+        if (frameColor)
+            transMode = Qt::SmoothTransformation;
+        else
+            transMode = Qt::FastTransformation;
+
         ui->lbImageCamera->setAlignment(Qt::AlignCenter);
         ui->lbImageCamera->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbImageCamera->size(),
-                                             Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+                                             Qt::IgnoreAspectRatio, transMode));
     }
 }
 
@@ -404,4 +410,14 @@ void Principal::appendPerspectivaSlider(int op)
         palete.setColor(ui->lbRGBPers->foregroundRole(), rgb);
         ui->lbRGBPers->setPalette(palete);
     }
+}
+
+void Principal::on_rbRGBMax_clicked()
+{
+    this->appendPerspectivaSlider(1);
+}
+
+void Principal::on_rbRGBMin_clicked()
+{
+    this->appendPerspectivaSlider(0);
 }

@@ -15,7 +15,7 @@ namespace cores {
     const string AMARELO = "AMARELO";
     const string VERDE = "VERDE";
     const string ROSA = "ROSA";
-    const string LARANJA = "LARANJA";
+    const string LARANJA = "LARANJA";   
 }
 
 //Estrutura para guardar valores Max e Min das cores
