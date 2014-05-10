@@ -223,9 +223,16 @@ void Principal::on_btnMudarVisao_clicked()
 
 }
 
-void Principal::processarFramesCalibracao(QImage image)
+void Principal::processarFramesCalibracao(QImage frame)
 {
-    ui->lbImageCamera->setPixmap(QPixmap::fromImage(image));
+    if (!frame.isNull())
+    {
+        /* Qt::SmoothTransformation = A imagem resultante é transformado usando a filtragem bilinear.
+         * Qt::FastTransformation   = A transformação é realizada de forma rápida, sem suavização.*/
+        ui->lbImageCamera->setAlignment(Qt::AlignCenter);
+        ui->lbImageCamera->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbImageCamera->size(),
+                                             Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    }
 }
 
 void Principal::doOnMouseDownImage(int x, int y)
@@ -338,31 +345,31 @@ void Principal::on_btnImportar_clicked()
         {
 
             obj.importarArquivo(dir.toStdString());
-            if (obj.isColor(cores::AZUL))
+            if (obj.isExistsColor(cores::AZUL))
             {
                 QPlainTextEdit* edts[] = {ui->edMaxAzulR, ui->edMaxAzulG, ui->edMaxAzulB,
                                           ui->edMinAzulR, ui->edMinAzulG, ui->edMinAzulB};
                 this->appendEditValueImport(edts, obj.getColor(cores::AZUL));
             }
-            if (obj.isColor(cores::AMARELO))
+            if (obj.isExistsColor(cores::AMARELO))
             {
                 QPlainTextEdit* edts[] = {ui->edMaxAmaR, ui->edMaxAmaG, ui->edMaxAmaB,
                                           ui->edMinAmaR, ui->edMinAmaG, ui->edMinAmaB};
                 this->appendEditValueImport(edts, obj.getColor(cores::AMARELO));
             }
-            if (obj.isColor(cores::VERDE))
+            if (obj.isExistsColor(cores::VERDE))
             {
                 QPlainTextEdit* edts[] = {ui->edMaxVerR, ui->edMaxVerG, ui->edMaxVerB,
                                           ui->edMinVerR, ui->edMinVerG, ui->edMinVerB};
                 this->appendEditValueImport(edts, obj.getColor(cores::VERDE));
             }
-            if (obj.isColor(cores::ROSA))
+            if (obj.isExistsColor(cores::ROSA))
             {
                 QPlainTextEdit* edts[] = {ui->edMaxRosaR, ui->edMaxRosaG, ui->edMaxRosaB,
                                           ui->edMinRosaR, ui->edMinRosaG, ui->edMinRosaB};
                 this->appendEditValueImport(edts, obj.getColor(cores::ROSA));
             }
-            if (obj.isColor(cores::LARANJA))
+            if (obj.isExistsColor(cores::LARANJA))
             {
                 QPlainTextEdit* edts[] = {ui->edMaxLaraR, ui->edMaxLaraG, ui->edMaxLaraB,
                                           ui->edMinLaraR, ui->edMinLaraG, ui->edMinLaraB};

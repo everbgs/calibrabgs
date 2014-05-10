@@ -23,7 +23,7 @@ public:
     ~Principal();
 
 public slots:
-    void processarFramesCalibracao(QImage image);
+    void processarFramesCalibracao(QImage frame);
     void doOnMouseDownImage(int x, int y);
 
 private slots:

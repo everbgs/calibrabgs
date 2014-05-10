@@ -193,8 +193,8 @@ void Filmadora::gravarVideoMovimentoArquivo(string nomeArq, string nameSave)
 	if (!arquivo.isOpened())
 		throw "Erro ao abrir arquivo para captura";
 	
-	double width = this->camera.get(CV_CAP_PROP_FRAME_WIDTH);
-    double height = this->camera.get(CV_CAP_PROP_FRAME_HEIGHT);
+	double width = arquivo.get(CV_CAP_PROP_FRAME_WIDTH);
+    double height = arquivo.get(CV_CAP_PROP_FRAME_HEIGHT);
 	
 	nameSave += ".avi";
 	VideoWriter video(nameSave, CV_FOURCC('D','I','V','3'), 20, cvSize((int)width, (int)height));
@@ -204,14 +204,14 @@ void Filmadora::gravarVideoMovimentoArquivo(string nomeArq, string nameSave)
 	Mat frame, frameAnt;	
 	bool achou;
 
-	if (!camera.read(frameAnt))
+	if (!arquivo.read(frameAnt))
 		throw "Não foi capturar o frame inicial";		
 
 	blur(frameAnt, frameAnt, cv::Size(3,3));
 	waitKey(30);
 
 	namedWindow("Arquivo");	
-	while(camera.read(frame))
+	while(arquivo.read(frame))
     {		
 		blur(frame, frame, cv::Size(3,3));
 		achou = this->isDetectouMovimento(frame, frameAnt);	
@@ -229,13 +229,23 @@ void Filmadora::gravarVideoMovimentoArquivo(string nomeArq, string nameSave)
 		waitKey(30); 		        
     }
 	destroyWindow("Camera");
-	this->camera.release();
+	arquivo.release();
 }
 
 void cls(void);
 
 int main()
 {
+
+	/*	
+	void gravarVideoCamera(string nomeArq);
+	void gravarVideoCameraMovimento(string nomeArq);	
+	void gravarVideoMovimentoArquivo(string nomeArq, string nameSave);
+	*/
+	Filmadora film;
+	film.setDispositivo(0);
+	film.gravarVideoMovimentoArquivo("video5", "novo2");
+
 	/* Testar e terminar menu
 
 	int op;

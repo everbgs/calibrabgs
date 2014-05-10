@@ -20,6 +20,7 @@ void Objeto::exportarArquivo(string dir)
     _corcalibra cAux;
     int i;
 
+    //Exporta para cada cor no formato: COR;RMax;GMax;BMax;RMin;GMin;BMin
     for (it = this->mapaCores.begin(); it != mapaCores.end(); it++)
     {
         cAux = it->second;
@@ -34,7 +35,6 @@ void Objeto::exportarArquivo(string dir)
 
 void Objeto::importarArquivo(string dir)
 {
-
     ifstream arquivo(dir.c_str());
 
     if (!arquivo.is_open() || !arquivo.good())
@@ -46,6 +46,7 @@ void Objeto::importarArquivo(string dir)
     _corcalibra c;
     int cont, ix;
 
+    //Importa para cada cor no formato: COR;RMax;GMax;BMax;RMin;GMin;BMin
     while (!arquivo.fail())
     {
         cont = 1;
@@ -62,6 +63,7 @@ void Objeto::importarArquivo(string dir)
 
             ++cont;
         }
+        //Salva a cor importada juntamente com seus intervalos
         mapaCores[cor] = c;
     }
     arquivo.close();
@@ -77,7 +79,7 @@ _corcalibra Objeto::getColor(string nameCor)
     return this->mapaCores[nameCor];
 }
 
-bool Objeto::isColor(string cor)
+bool Objeto::isExistsColor(string cor)
 {
     return (this->mapaCores.count(cor) != 0);
 }

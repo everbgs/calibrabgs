@@ -44,7 +44,7 @@ void CalibraFrame::run()
         if (this->visao)
         {
             cv::cvtColor(frame, frame, CV_BGR2RGB);
-            QImage qimgOriginal( frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+            QImage qimgOriginal((const unsigned char*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
             emit frameToQImage(qimgOriginal);
         }
         else

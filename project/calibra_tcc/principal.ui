@@ -233,6 +233,9 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
+       <property name="insertPolicy">
+        <enum>QComboBox::InsertAtBottom</enum>
+       </property>
        <property name="frame">
         <bool>true</bool>
        </property>

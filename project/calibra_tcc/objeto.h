@@ -18,27 +18,34 @@ namespace cores {
     const string LARANJA = "LARANJA";
 }
 
-struct _corcalibra {
-    int _cores[6]; //MAX: 0..2, MIN: 3..5
+//Estrutura para guardar valores Max e Min das cores
+struct _corcalibra {    
+    //MAX: 0..2, MIN: 3..5
+    int _cores[6];
 };
 
 class Objeto
 {
 
 private:
+    //Mapa das cores, Key = Cor, Value = RGB Max, Min
     map<string, _corcalibra> mapaCores;
 public:
     Objeto();
-
     ~Objeto();
 
+    //Importação e Exportação das cores
     void exportarArquivo(string dir);
     void importarArquivo(string dir);
 
+    //Adiciona a Cor juntamente com seus intervalos
     void setColor(string nameCor, _corcalibra range);
+
+    //Devolve a cor Informada
     _corcalibra getColor(string nameCor);
 
-    bool isColor(string cor);
+    //Se Existe a cor
+    bool isExistsColor(string cor);
 
 };
 
