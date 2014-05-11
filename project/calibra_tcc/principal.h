@@ -9,6 +9,8 @@
 #include "calibraframe.h"
 #include "objeto.h"
 #include <QFileDialog>
+#include <QDebug>
+
 
 namespace Ui {
     class Principal;
@@ -23,7 +25,7 @@ public:
     ~Principal();
 
 public slots:
-    void processarFramesCalibracao(QImage frame, bool frameColor);
+    void processarFramesCalibracao(QImage frame);
     void doOnMouseDownImage(int x, int y);
 
 private slots:

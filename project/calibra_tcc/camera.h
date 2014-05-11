@@ -5,21 +5,21 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-
 using namespace cv;
 
 class Camera
 {
 
 private:
-    VideoCapture camera;   
-
+    VideoCapture* camera;
 public:
+    Camera();
+    ~Camera();
+
     bool isCameraOpen(void);
-
-    Mat nextFrame(void);
-
+    bool readFrame(Mat& frame);
     void openCamera(int device);
+    void openCamera(string device);
 };
 
 #endif // ROBO_H

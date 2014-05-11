@@ -4,20 +4,29 @@
 #include <QObject>
 #include <QThread>
 #include <QMutex>
+#include <QWaitCondition>
 #include "camera.h"
 #include <QImage>
+#include <time.h>
+#include <QDebug>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+
+using namespace cv;
 
 class CalibraFrame : public QThread
 {
     Q_OBJECT
 
 private:
-    Camera* webCam;
+    Camera* camera;
     bool bStop;
-    QMutex mutexCam;
+    bool visaoColor;
+    struct timespec ts;
+    QMutex mutex;
+    QWaitCondition condition;
+    QImage imagem;
 
 protected:
     void run();
@@ -25,16 +34,25 @@ protected:
 public:
     explicit CalibraFrame(QObject *parent = 0);
     ~CalibraFrame();
-    bool visao;
+
     int RMax, RMin;
     int GMax, GMin;
     int BMax, BMin;
 
-
-public slots:
     void stop();
+
+    void play();
+
+    void msleep(int ms);
+
+    bool isStopped() const;
+
+    void setVisaoRGB(bool enabled);
+
+    bool isVisaoRGB() const;
+
 signals:
-    void frameToQImage(QImage image, bool imageColor);
+    void frameToQImage(QImage image);
 };
 
 #endif // CALIBRAFRAME_H

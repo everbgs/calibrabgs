@@ -8,13 +8,16 @@ Principal::Principal(QWidget *parent) :
 
     this->calibraClick = false;
 
-    ui->setupUi(this);
-    this->calibra = NULL;
+    ui->setupUi(this);    
     connect(ui->lbImageCamera, SIGNAL(onMouseDown(int,int)), this, SLOT(doOnMouseDownImage(int,int)));
+
+    this->calibra = NULL;
 }
 
 Principal::~Principal()
 {    
+    this->calibra->stop();
+    delete this->calibra;
     delete ui;
 }
 
@@ -193,7 +196,6 @@ void Principal::on_btnCarregar_clicked()
             break;
         }
     }
-
 }
 
 void Principal::on_btnIniciar_clicked()
@@ -201,43 +203,31 @@ void Principal::on_btnIniciar_clicked()
     if (ui->btnIniciar->text() == "Parado")
     {
         ui->btnIniciar->setText("Iniciar");
-
         if (this->calibra->isRunning())
             this->calibra->stop();
     }
     else
     {
         ui->btnIniciar->setText("Parado");
-
         delete this->calibra;
         this->calibra = new CalibraFrame(this);
-        connect(this->calibra, SIGNAL(frameToQImage(QImage, bool)), this, SLOT(processarFramesCalibracao(QImage, bool)));
-        this->calibra->start();
+        connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
+        this->calibra->play();
     }
 }
 
 void Principal::on_btnMudarVisao_clicked()
-{
+{    
     if (this->calibra)
-        this->calibra->visao = !this->calibra->visao;
-
+        this->calibra->setVisaoRGB(!this->calibra->isVisaoRGB());
 }
 
-void Principal::processarFramesCalibracao(QImage frame, bool frameColor)
+void Principal::processarFramesCalibracao(QImage frame)
 {
     if (!frame.isNull())
-    {        
-        /* Qt::SmoothTransformation = A imagem resultante é transformado usando a filtragem bilinear.
-         * Qt::FastTransformation   = A transformação é realizada de forma rápida, sem suavização.*/
-         Qt::TransformationMode transMode;
-        if (frameColor)
-            transMode = Qt::SmoothTransformation;
-        else
-            transMode = Qt::FastTransformation;
-
+    {               
         ui->lbImageCamera->setAlignment(Qt::AlignCenter);
-        ui->lbImageCamera->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbImageCamera->size(),
-                                             Qt::IgnoreAspectRatio, transMode));
+        ui->lbImageCamera->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbImageCamera->size()));
     }
 }
 
