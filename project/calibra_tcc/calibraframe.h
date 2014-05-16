@@ -8,11 +8,13 @@
 #include "camera.h"
 #include <QImage>
 #include <time.h>
+#include <vector>
 #include <QDebug>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+using namespace std;
 using namespace cv;
 
 class CalibraFrame : public QThread
@@ -22,11 +24,11 @@ class CalibraFrame : public QThread
 private:
     Camera* camera;
     bool bStop;
+    bool exibe_circulo;
     bool visaoColor;
     struct timespec ts;
     QMutex mutex;
     QWaitCondition condition;
-    QImage imagem;
 
 protected:
     void run();
@@ -48,6 +50,8 @@ public:
     bool isStopped() const;
 
     void setVisaoRGB(bool enabled);
+
+    void setExibeCirculo(bool visible);
 
     bool isVisaoRGB() const;
 

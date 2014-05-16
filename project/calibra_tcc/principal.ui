@@ -1532,6 +1532,19 @@
         </property>
        </widget>
       </widget>
+      <widget class="QCheckBox" name="cbkCirculo">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>540</y>
+         <width>131</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Exibir Circulo(s)</string>
+       </property>
+      </widget>
      </widget>
     </widget>
    </item>

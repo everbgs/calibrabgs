@@ -16,8 +16,11 @@ Principal::Principal(QWidget *parent) :
 
 Principal::~Principal()
 {    
-    this->calibra->stop();
-    delete this->calibra;
+    if (this->calibra)
+    {
+        this->calibra->stop();
+        delete this->calibra;
+    }
     delete ui;
 }
 
@@ -211,6 +214,7 @@ void Principal::on_btnIniciar_clicked()
         ui->btnIniciar->setText("Parado");
         delete this->calibra;
         this->calibra = new CalibraFrame(this);
+        this->calibra->setExibeCirculo(ui->cbkCirculo->isChecked());
         connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
         this->calibra->play();
     }
@@ -410,4 +414,11 @@ void Principal::on_rbRGBMax_clicked()
 void Principal::on_rbRGBMin_clicked()
 {
     this->appendPerspectivaSlider(0);
+}
+
+void Principal::on_cbkCirculo_clicked()
+{
+    if (this->calibra)
+        this->calibra->setExibeCirculo(ui->cbkCirculo->isChecked());
+
 }

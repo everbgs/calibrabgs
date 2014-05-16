@@ -4,6 +4,7 @@ CalibraFrame::CalibraFrame(QObject *parent) : QThread(parent)
 {
     this->visaoColor = true;
     this->bStop = true;
+    this->exibe_circulo = false;
 
     this->camera = new Camera();
     this->camera->openCamera(0);
@@ -27,7 +28,13 @@ void CalibraFrame::run()
     if (!this->camera->isCameraOpen())
         return;
 
+    QImage imagem;
     Mat frame, dst;
+    vector<Vec3f> cir;
+    Point center;
+    int raio;
+    unsigned int i;
+
     while (!this->bStop)
     {
         {
@@ -41,20 +48,29 @@ void CalibraFrame::run()
             continue;
         }
 
+        cv::inRange(frame, cv::Scalar(BMin, GMin, RMin), cv::Scalar(BMax, GMax, RMax), dst);
+        cv::GaussianBlur(dst,dst,cv::Size(9,9), 2,2);
+
         if (this->visaoColor)
         {
+            if (this->exibe_circulo)
+            {
+                cv::HoughCircles(dst, cir, CV_HOUGH_GRADIENT, 2, dst.rows/4, 200, 100 );
+                for(i = 0; i < cir.size(); i++ )
+                {
+                    center.x = cvRound(cir[i][0]);
+                    center.y = cvRound(cir[i][1]);
+                    raio = cvRound(cir[i][2]);
+                    circle(frame, center, raio, Scalar(0,0,255), 2, CV_AA);
+                }
+            }
             cv::cvtColor(frame, frame, CV_BGR2RGB);
-            this->imagem = QImage((const unsigned char*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+            imagem = QImage((const unsigned char*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
         }
-        else
-        {
-            /*Max = claro, min = escuro*/
-            cv::inRange(frame, cv::Scalar(BMin, GMin, RMin), cv::Scalar(BMax, GMax, RMax), dst);
-            cv::GaussianBlur(dst,dst,cv::Size(9,9), 2,2);
+        else        
+            imagem = QImage(dst.data, dst.cols, dst.rows, dst.step, QImage::Format_Indexed8);
 
-            this->imagem = QImage(dst.data, dst.cols, dst.rows, dst.step, QImage::Format_Indexed8);
-        }        
-        emit frameToQImage(this->imagem);
+        emit frameToQImage(imagem);
         this->msleep(20);
     }
 }
@@ -83,17 +99,10 @@ void CalibraFrame::msleep(int ms)
     nanosleep(&ts, NULL);
 }
 
-bool CalibraFrame::isStopped() const
-{
-    return this->bStop;
-}
+bool CalibraFrame::isStopped() const { return this->bStop; }
 
-void CalibraFrame::setVisaoRGB(bool enabled)
-{
-    this->visaoColor = enabled;
-}
+void CalibraFrame::setVisaoRGB(bool enabled){ this->visaoColor = enabled; }
 
-bool CalibraFrame::isVisaoRGB() const
-{
-    return this->visaoColor;
-}
+void CalibraFrame::setExibeCirculo(bool visible){ this->exibe_circulo = visible; }
+
+bool CalibraFrame::isVisaoRGB() const { return this->visaoColor; }

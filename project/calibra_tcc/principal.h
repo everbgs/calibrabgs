@@ -49,6 +49,8 @@ private slots:
 
     void on_rbRGBMin_clicked();
 
+    void on_cbkCirculo_clicked();
+
 private:
     Ui::Principal *ui;    
     CalibraFrame* calibra;
