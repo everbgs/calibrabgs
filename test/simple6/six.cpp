@@ -58,7 +58,7 @@ char* Filmadora::getDateTime(void)
 {
 	time(&rawtime);  	
 	timeinfo = localtime(&rawtime);
-	strftime(tempo_str, 30, "%d/%m/%G %T", timeinfo);
+	strftime(tempo_str, 30, "%d/%m/%Y %H:%M:%S", timeinfo);
 	return tempo_str;
 }
 
