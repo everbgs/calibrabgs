@@ -17,6 +17,7 @@ public:
     ~Camera();
 
     bool isCameraOpen(void);
+    void stopCamera(void);
     bool readFrame(Mat& frame);
     void openCamera(int device);
     void openCamera(string device);

@@ -1,62 +1,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <string.h>
 #include <time.h> 
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+#include "opencv2/core/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#define MAX_RUIDO_PERMITIDO 35
 
 using namespace std;
 using namespace cv;
 
-class Filmadora {
+void cls(void);
 
+void system_pause(const char *msg);
+
+
+class Filmadora {
 private:
 	/*Classe responsavel pela captura*/
 	VideoCapture camera;
-
-	/*Tipos de dispositivos, parametros:
-		inteiro = Geralmente a WebCam ou cameras acopladas a maquina
-		string = Cameras externas, Camera IP
-	*/
-	int intDisp;
-	string strDisp;
 
 	/*Atributos para mostrar o tempo*/
 	char tempo_str[30];
   	time_t rawtime;
 	struct tm * timeinfo;
 
-	/*Abre Camera para captura*/
-	void abrirCamera(void);
-
 	/*Retorna dia/Mes/Ano Hora:Minuto:Segundo*/
 	char* getDateTime(void);
 
 	/*Retorna verdadeiro caso haja diferença entre as duas imagens*/
-	bool isDetectouMovimento(Mat& m1, Mat& m2);
-public:
-	/*Informa o Dispositivo que vai ser utilizado*/
+	bool isDetectouMovimento(Mat& m1, Mat& m2);	
+
+public:	
+	~Filmadora();
+
+	/*fecha a estrutura caso o dispositivo esteja aberto*/	
+	void fecharCamera(void);
+	
+	/*Informa o Dispositivo/Arquivo que vai ser utilizado*/
 	void setDispositivo(int d);
 	void setDispositivo(string s);
 
 	/*Grava video da camera*/
 	void gravarVideoCamera(string nomeArq);
-	void gravarVideoCameraMovimento(string nomeArq);
 
-	/*Função extra, grava somente o movimento de um arquivo de video*/
-	void gravarVideoMovimentoArquivo(string nomeArq, string nameSave);
+	/*Grava video da camera ou de algum arquivo .avi*/
+	void gravarVideoCameraMovimento(string nomeArq);
 };
 
-void Filmadora::abrirCamera(void)
+Filmadora::~Filmadora()
 {
-	if (this->camera.isOpened())
-		this->camera.release();	
-
-	if (this->strDisp != "")
-		this->camera.open(this->strDisp);
-	else if (intDisp > -2)
-		this->camera.open(this->intDisp);
+	this->fecharCamera();
 }
 
 char* Filmadora::getDateTime(void)
@@ -80,41 +75,43 @@ bool Filmadora::isDetectouMovimento(Mat& m1, Mat& m2)
 			val = (abs(m1.at<cv::Vec3b>(i,l)[0] - m2.at<cv::Vec3b>(i,l)[0]) +
   				   abs(m1.at<cv::Vec3b>(i,l)[1] - m2.at<cv::Vec3b>(i,l)[1]) +
 				   abs(m1.at<cv::Vec3b>(i,l)[2] - m2.at<cv::Vec3b>(i,l)[2])) / 3;
-			if (val > 35)
+			if (val > MAX_RUIDO_PERMITIDO)
 				return true;
 		}
 	}
 	return false;
 }
 
+void Filmadora::fecharCamera(void)
+{
+	if (this->camera.isOpened())
+		this->camera.release();	
+}
+
 void Filmadora::setDispositivo(int d)
 {
-	this->strDisp = "";
-	this->intDisp = d;
+	this->fecharCamera();
+	this->camera.open(d);
 }
 
 void Filmadora::setDispositivo(string s)
 {
-	this->strDisp = s;
-	this->intDisp = -2;
+	this->fecharCamera();
+	this->camera.open(s);
 }
 
 void Filmadora::gravarVideoCamera(string nomeArq)
 {
-	this->abrirCamera();
-
 	if (!this->camera.isOpened())
 		throw "Erro ao abrir camera para captura";
 
-	double width = this->camera.get(CV_CAP_PROP_FRAME_WIDTH);
-    double height = this->camera.get(CV_CAP_PROP_FRAME_HEIGHT); 
-    Mat frame; 
-	
-	printf("Tamanho da Captura\n%.0f x %.0f\n", width, height); 
+	Size size = Size(this->camera.get(CV_CAP_PROP_FRAME_WIDTH),  
+                     this->camera.get(CV_CAP_PROP_FRAME_HEIGHT));   	
+    Mat frame; 	
     namedWindow ("Camera", CV_WINDOW_AUTOSIZE);     
 
 	nomeArq += ".avi";
-	VideoWriter video(nomeArq, CV_FOURCC('D','I','V','3'), 20, cvSize((int)width, (int)height));
+	VideoWriter video(nomeArq, CV_FOURCC('D','I','V','3'), 20, size);
     if(!video.isOpened())
 		throw "Não foi possivel criar o arquivo de video capturado";
  
@@ -131,30 +128,36 @@ void Filmadora::gravarVideoCamera(string nomeArq)
     }
 	destroyWindow("Camera");
 	this->camera.release();
+	system_pause("Video Normal");
 }
 
 
 void Filmadora::gravarVideoCameraMovimento(string nomeArq)
 {
-	this->abrirCamera();	
-
 	if (!this->camera.isOpened())
-		throw "Erro ao abrir camera para captura";
+	{
+		fprintf(stderr, "Erro ao abrir dispositivo para captura");
+		return;
+	}		
 
-	double width = this->camera.get(CV_CAP_PROP_FRAME_WIDTH);
-    double height = this->camera.get(CV_CAP_PROP_FRAME_HEIGHT);
+	Size size = Size(this->camera.get(CV_CAP_PROP_FRAME_WIDTH),  
+                     this->camera.get(CV_CAP_PROP_FRAME_HEIGHT));   	
 
+	
 	nomeArq += ".avi";
-	VideoWriter video(nomeArq, CV_FOURCC('D','I','V','3'), 20, cvSize((int)width, (int)height));
+	VideoWriter video(nomeArq, CV_FOURCC('D','I','V','3'), 20, size);
 
     if(!video.isOpened())
-		throw "Não foi possivel criar o video capturado";
+	{
+		fprintf(stderr, "Não foi possivel criar o video capturado");
+		return;
+	}		
+
 
 	Mat frame, frameAnt; 	
 	bool achou;	
 	char teclado;
 
-	this->camera >> frameAnt; 			
 	if (!this->camera.read(frameAnt))
 		throw "Erro ao capturar frame inicial";
 
@@ -183,99 +186,57 @@ void Filmadora::gravarVideoCameraMovimento(string nomeArq)
     }
 	destroyWindow("Camera");
 	this->camera.release();
+	system_pause("Video Movimento");
 }
-
-void Filmadora::gravarVideoMovimentoArquivo(string nomeArq, string nameSave)
-{
-	nomeArq += ".avi";
-	VideoCapture arquivo(nomeArq);
-
-	if (!arquivo.isOpened())
-		throw "Erro ao abrir arquivo para captura";
-	
-	double width = arquivo.get(CV_CAP_PROP_FRAME_WIDTH);
-    double height = arquivo.get(CV_CAP_PROP_FRAME_HEIGHT);
-	
-	nameSave += ".avi";
-	VideoWriter video(nameSave, CV_FOURCC('D','I','V','3'), 20, cvSize((int)width, (int)height));
-	if (!video.isOpened())
-		throw "Não foi possivel criar o video capturado";
-	
-	Mat frame, frameAnt;	
-	bool achou;
-
-	if (!arquivo.read(frameAnt))
-		throw "Não foi capturar o frame inicial";		
-
-	blur(frameAnt, frameAnt, cv::Size(3,3));
-	waitKey(30);
-
-	namedWindow("Arquivo");	
-	while(arquivo.read(frame))
-    {		
-		blur(frame, frame, cv::Size(3,3));
-		achou = this->isDetectouMovimento(frame, frameAnt);	
-	
-	    frameAnt = frame.clone();
-
-		putText(frame, this->getDateTime(), Point(1, 40), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(255,255,255));
-		if (achou)
-		{
-			video << frame;			
-			putText(frame, "Gravando...", Point(1, 20), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(255,255,255));
-		}
-	
-        imshow("Camera", frame);
-		waitKey(30); 		        
-    }
-	destroyWindow("Camera");
-	arquivo.release();
-}
-
-void cls(void);
 
 int main()
 {
-
-	/*	
-	void gravarVideoCamera(string nomeArq);
-	void gravarVideoCameraMovimento(string nomeArq);	
-	void gravarVideoMovimentoArquivo(string nomeArq, string nameSave);
-	*/
-	Filmadora film;
-	film.setDispositivo(0);
-	film.gravarVideoMovimentoArquivo("video5", "novo2");
-
-	/* Testar e terminar menu
-
 	int op;
 	Filmadora film;
-	film.setDispositivo(0);
-
+	char strName[100], strFile[100];
 	do{			
+		cls();
 		printf("*** Menu Principal ***\n"
-				"1 - Gravar Video\n"
-				"2 - Exibir Gravacao\n"
-				"3 - Gravar Video (Movimento)\n"
-				"4 - Calibrar Ruido\n"
+				"1 - Gravar video com camera\n"
+				"2 - Gravar somente movimento com camera\n"
+				"3 - Gravar somente movimento com arquivo\n"
 				"0 - Sair\n-> ");
-		scanf("%d", &op);
+		scanf("%d%*c", &op);	
+		if ((op == 1)||(op == 2)||(op == 3))
+		{
+			printf("Informe o nome do arquivo que sera salvo(Max 100)\n-> ");
+			fgets(strName, 100, stdin);
+			strName[strlen(strName)-1] = '\0';
+		}
 		switch(op)
 		{
 			case 1:
-				film.gravarVideoAVI();				
+				film.setDispositivo(0);
+				film.gravarVideoCamera(strName);				
 				break;				
 			case 2:
-				film.exibirVideo();				
+				film.setDispositivo(0);
+				film.gravarVideoCameraMovimento(strName);				
 				break;				
 			case 3:
-				film.gravarVideoMovimento();				
-				break;				
-		}
-	//	cls();
-	}while (op != 0);	*/
+				printf("Informe o nome do arquivo.avi que sera capturado(Max 100)\n-> ");
+				fgets(strFile, 100, stdin);
+				strFile[strlen(strFile)-1] = '\0';
 
+				film.setDispositivo(strFile);
+				film.gravarVideoCameraMovimento(strName);								
+				break;				
+		}		
+	} while (op != 0);	
+	
 	return 0;
+}
+
+void system_pause(const char *msg)
+{
+	char lixo[100];
+	printf("\nOperacaoo concluida: %s\nPressione qualquer tecla para sair...\n", msg);
+	fgets(lixo, 100, stdin);
 }
 
 void cls(void)
@@ -286,4 +247,3 @@ void cls(void)
 	system("cls");
 #endif
 }
-

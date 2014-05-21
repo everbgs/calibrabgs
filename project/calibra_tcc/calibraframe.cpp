@@ -35,8 +35,14 @@ void CalibraFrame::run()
     int raio;
     unsigned int i;
 
+    int cnt = 0;
+    time_t start, end;
+    double sec, fps;
+
+    time(&start);
+
     while (!this->bStop)
-    {
+    {        
         {
             QMutexLocker locker(&this->mutex);
             if (this->bStop) continue;
@@ -46,21 +52,22 @@ void CalibraFrame::run()
         {            
             this->bStop = true;
             continue;
-        }
+        }        
 
-        cv::inRange(frame, cv::Scalar(BMin, GMin, RMin), cv::Scalar(BMax, GMax, RMax), dst);
+        cv::inRange(frame, cv::Scalar(BMin, GMin, RMin), cv::Scalar(BMax, GMax, RMax), dst);        
         cv::GaussianBlur(dst,dst,cv::Size(9,9), 2,2);
 
         if (this->visaoColor)
         {
             if (this->exibe_circulo)
             {
-                cv::HoughCircles(dst, cir, CV_HOUGH_GRADIENT, 2, dst.rows/4, 200, 100 );
+                cv::HoughCircles(dst, cir, CV_HOUGH_GRADIENT, 2, dst.rows/4,200, 100);
+
                 for(i = 0; i < cir.size(); i++ )
                 {
                     center.x = cvRound(cir[i][0]);
                     center.y = cvRound(cir[i][1]);
-                    raio = cvRound(cir[i][2]);
+                    raio = cvRound(cir[i][2]);                    
                     circle(frame, center, raio, Scalar(0,0,255), 2, CV_AA);
                 }
             }
@@ -68,11 +75,24 @@ void CalibraFrame::run()
             imagem = QImage((const unsigned char*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
         }
         else        
-            imagem = QImage(dst.data, dst.cols, dst.rows, dst.step, QImage::Format_Indexed8);
+        {
 
+            imagem = QImage(dst.data, dst.cols, dst.rows, dst.step, QImage::Format_Indexed8);
+        }
+
+
+        //FPS
+        time(&end);
+        if (cnt == INT_MAX) cnt = 0;
+        ++cnt;
+        sec = difftime(end,start);
+        fps = cnt/sec;
+
+        emit fpsCapture(fps);
         emit frameToQImage(imagem);
         this->msleep(20);
     }
+    this->camera->stopCamera();
 }
 
 void CalibraFrame::stop()

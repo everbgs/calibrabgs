@@ -216,6 +216,7 @@ void Principal::on_btnIniciar_clicked()
         this->calibra = new CalibraFrame(this);
         this->calibra->setExibeCirculo(ui->cbkCirculo->isChecked());
         connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
+        connect(this->calibra, SIGNAL(fpsCapture(double)), this, SLOT(doFpsCapture(double)));
         this->calibra->play();
     }
 }
@@ -230,9 +231,18 @@ void Principal::processarFramesCalibracao(QImage frame)
 {
     if (!frame.isNull())
     {               
-        ui->lbImageCamera->setAlignment(Qt::AlignCenter);
-        ui->lbImageCamera->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbImageCamera->size()));
+       // ui->lbImageCamera->setAlignment(Qt::AlignCenter);
+       // ui->lbImageCamera->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbImageCamera->size()));
+
+         ui->lbCameraJogo->setAlignment(Qt::AlignCenter);
+         ui->lbCameraJogo->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbCameraJogo->size()));
+
     }
+}
+
+void Principal::doFpsCapture(double fps)
+{
+    ui->lbFPS->setText(QString::number(fps, 'g', 4));
 }
 
 void Principal::doOnMouseDownImage(int x, int y)

@@ -8,6 +8,7 @@
 #include "camera.h"
 #include <QImage>
 #include <time.h>
+#include <limits.h>
 #include <vector>
 #include <QDebug>
 #include <opencv2/core/core.hpp>
@@ -57,6 +58,8 @@ public:
 
 signals:
     void frameToQImage(QImage image);
+    void fpsCapture(double fps);
+
 };
 
 #endif // CALIBRAFRAME_H

@@ -26,6 +26,8 @@ public:
 
 public slots:
     void processarFramesCalibracao(QImage frame);
+    void doFpsCapture(double fps);
+
     void doOnMouseDownImage(int x, int y);
 
 private slots:

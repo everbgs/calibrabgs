@@ -15,6 +15,11 @@ bool Camera::isCameraOpen(void)
     return this->camera->isOpened();
 }
 
+void Camera::stopCamera()
+{    
+    this->camera->release();
+}
+
 bool Camera::readFrame(Mat& frame)
 {
     return this->camera->read(frame);
