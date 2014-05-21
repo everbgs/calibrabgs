@@ -67,7 +67,8 @@ void CalibraFrame::run()
                 {
                     center.x = cvRound(cir[i][0]);
                     center.y = cvRound(cir[i][1]);
-                    raio = cvRound(cir[i][2]);                    
+                    raio = cvRound(cir[i][2]);
+                    qDebug() << "X: " << center.x << " Y: " << center.y;
                     circle(frame, center, raio, Scalar(0,0,255), 2, CV_AA);
                 }
             }

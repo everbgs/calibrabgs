@@ -231,11 +231,11 @@ void Principal::processarFramesCalibracao(QImage frame)
 {
     if (!frame.isNull())
     {               
-       // ui->lbImageCamera->setAlignment(Qt::AlignCenter);
-       // ui->lbImageCamera->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbImageCamera->size()));
+       ui->lbImageCamera->setAlignment(Qt::AlignCenter);
+       ui->lbImageCamera->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbImageCamera->size()));
 
-         ui->lbCameraJogo->setAlignment(Qt::AlignCenter);
-         ui->lbCameraJogo->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbCameraJogo->size()));
+         //ui->lbCameraJogo->setAlignment(Qt::AlignCenter);
+         //ui->lbCameraJogo->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbCameraJogo->size()));
 
     }
 }
