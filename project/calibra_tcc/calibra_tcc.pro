@@ -17,13 +17,17 @@ SOURCES += main.cpp\
     camera.cpp \
     cameralabel.cpp \
     calibraframe.cpp \
-    objeto.cpp
+    objeto.cpp \
+    bola.cpp \
+    objetorastreavel.cpp
 
 HEADERS  += principal.h \
     camera.h \
     cameralabel.h \
     calibraframe.h \
-    objeto.h
+    objeto.h \
+    bola.h \
+    objetorastreavel.h
 
 FORMS    += principal.ui
 

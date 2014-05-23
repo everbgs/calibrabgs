@@ -29,7 +29,7 @@ void CalibraFrame::run()
         return;
 
     QImage imagem;
-    Mat frame, dst;
+    Mat frame, dst, dst2;
     vector<Vec3f> cir;
     Point center;
     int raio;
@@ -54,13 +54,28 @@ void CalibraFrame::run()
             continue;
         }        
 
-        cv::inRange(frame, cv::Scalar(BMin, GMin, RMin), cv::Scalar(BMax, GMax, RMax), dst);        
+        cv::inRange(frame, cv::Scalar(128, 4, 0), cv::Scalar(233, 148, 75), dst);
         cv::GaussianBlur(dst,dst,cv::Size(9,9), 2,2);
+
+        //cv::inRange(frame, cv::Scalar(20, 135, 177), cv::Scalar(0, 27, 94), dst2);
+        cv::inRange(frame, cv::Scalar(0, 27, 94), cv::Scalar(20, 135, 117), dst2);
+        cv::GaussianBlur(dst2,dst2,cv::Size(9,9), 2,2);
 
         if (this->visaoColor)
         {
             if (this->exibe_circulo)
             {
+                cv::HoughCircles(dst2, cir, CV_HOUGH_GRADIENT, 2, dst2.rows/4,200, 100);
+
+                for(i = 0; i < cir.size(); i++ )
+                {
+                    center.x = cvRound(cir[i][0]);
+                    center.y = cvRound(cir[i][1]);
+                    raio = cvRound(cir[i][2]);
+                    qDebug() << "Bola 1 X: " << center.x << " Y: " << center.y;
+                    circle(frame, center, raio, Scalar(0,0,255), 2, CV_AA);
+                }
+
                 cv::HoughCircles(dst, cir, CV_HOUGH_GRADIENT, 2, dst.rows/4,200, 100);
 
                 for(i = 0; i < cir.size(); i++ )
@@ -68,9 +83,12 @@ void CalibraFrame::run()
                     center.x = cvRound(cir[i][0]);
                     center.y = cvRound(cir[i][1]);
                     raio = cvRound(cir[i][2]);
-                    qDebug() << "X: " << center.x << " Y: " << center.y;
+                    qDebug() << "Bola 2 X: " << center.x << " Y: " << center.y;
                     circle(frame, center, raio, Scalar(0,0,255), 2, CV_AA);
                 }
+
+
+
             }
             cv::cvtColor(frame, frame, CV_BGR2RGB);
             imagem = QImage((const unsigned char*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
@@ -78,7 +96,7 @@ void CalibraFrame::run()
         else        
         {
 
-            imagem = QImage(dst.data, dst.cols, dst.rows, dst.step, QImage::Format_Indexed8);
+            imagem = QImage(dst2.data, dst2.cols, dst2.rows, dst2.step, QImage::Format_Indexed8);
         }
 
 

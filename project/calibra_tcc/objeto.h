@@ -26,8 +26,7 @@ struct _corcalibra {
 
 class Objeto
 {
-
-private:
+protected:
     //Mapa das cores, Key = Cor, Value = RGB Max, Min
     map<string, _corcalibra> mapaCores;
 public:
