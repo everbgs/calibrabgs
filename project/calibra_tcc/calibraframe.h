@@ -59,7 +59,6 @@ public:
 signals:
     void frameToQImage(QImage image);
     void fpsCapture(double fps);
-
 };
 
 #endif // CALIBRAFRAME_H

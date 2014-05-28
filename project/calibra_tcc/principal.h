@@ -10,7 +10,10 @@
 #include "objeto.h"
 #include <QFileDialog>
 #include <QDebug>
-
+#include "bola.h"
+#include "rastrearobjeto.h"
+#include "camerathread.h"
+#include <opencv2/core/core.hpp>
 
 namespace Ui {
     class Principal;
@@ -25,6 +28,8 @@ public:
     ~Principal();
 
 public slots:
+    void processarFramesLocalizacao(QImage frame);
+
     void processarFramesCalibracao(QImage frame);
     void doFpsCapture(double fps);
 
@@ -53,10 +58,16 @@ private slots:
 
     void on_cbkCirculo_clicked();
 
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
+
 private:
     Ui::Principal *ui;    
     CalibraFrame* calibra;
     bool calibraClick;
+    Bola bola;
+    RastrearObjeto* thObj;
 
     void appendEditValueSlider(QPlainTextEdit* ed, QString value);
     void appendEditValueSlider(QSlider** sliders, QPlainTextEdit** edDestino, int n);

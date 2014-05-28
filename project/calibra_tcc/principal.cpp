@@ -24,6 +24,15 @@ Principal::~Principal()
     delete ui;
 }
 
+void Principal::processarFramesLocalizacao(QImage frame)
+{
+    if (!frame.isNull())
+    {
+       ui->lbCameraJogo->setAlignment(Qt::AlignCenter);
+       ui->lbCameraJogo->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbCameraJogo->size()));
+    }
+}
+
 void Principal::changeThreadCalibra(int value, int channel, int range)
 {
     if (!this->calibra) return;
@@ -347,7 +356,7 @@ void Principal::on_btnExportar_clicked()
 
 void Principal::on_btnImportar_clicked()
 {
-    QString dir =  QFileDialog::getOpenFileName(this, "Salvar arquivo", "", "Text files (*.txt)",0);
+    QString dir =  QFileDialog::getOpenFileName(this, "Abrir arquivo", "", "Text files (*.txt)",0);
     if (dir != "")
     {
         Objeto obj;
@@ -431,4 +440,38 @@ void Principal::on_cbkCirculo_clicked()
     if (this->calibra)
         this->calibra->setExibeCirculo(ui->cbkCirculo->isChecked());
 
+}
+
+void Principal::on_pushButton_clicked()
+{
+    /*Temporario para teste*/
+    QString dir =  QFileDialog::getOpenFileName(this, "Abrir arquivo", "", "Text files (*.txt)",0);
+    if (dir != "")
+    {
+        this->bola.importarArquivo(dir.toStdString());
+    }
+}
+
+void Principal::on_pushButton_2_clicked()
+{
+    if (ui->pushButton_2->text() == "Parado")
+    {
+        /*tratar fechamento da camera*/
+        ui->pushButton_2->setText("Iniciar");        
+    }
+    else
+    {
+        /*Temporario para testes*/
+        Camera* c = new Camera();
+        c->openCamera(0);
+
+        CameraThread* th = new CameraThread(this);
+        connect(th, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesLocalizacao(QImage)));
+        th->setCamera(c);
+
+        this->thObj = new RastrearObjeto(this);
+        this->thObj->setObjeto(&this->bola);
+        connect(th, SIGNAL(setFrameCapture(cv::Mat)), this->thObj, SLOT(receberFrame(cv::Mat)));
+        th->play();
+    }
 }

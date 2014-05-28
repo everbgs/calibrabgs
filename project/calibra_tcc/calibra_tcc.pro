@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     calibraframe.cpp \
     objeto.cpp \
     bola.cpp \
-    objetorastreavel.cpp
+    objetorastreavel.cpp \
+    rastrearobjeto.cpp \
+    camerathread.cpp
 
 HEADERS  += principal.h \
     camera.h \
@@ -27,7 +29,9 @@ HEADERS  += principal.h \
     calibraframe.h \
     objeto.h \
     bola.h \
-    objetorastreavel.h
+    objetorastreavel.h \
+    rastrearobjeto.h \
+    camerathread.h
 
 FORMS    += principal.ui
 
