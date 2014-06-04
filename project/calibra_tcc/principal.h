@@ -10,7 +10,6 @@
 #include "objeto.h"
 #include <QFileDialog>
 #include <QDebug>
-#include "bola.h"
 #include "rastrearobjeto.h"
 #include "camerathread.h"
 #include <opencv2/core/core.hpp>
@@ -29,6 +28,8 @@ public:
 
 public slots:
     void processarFramesLocalizacao(QImage frame);
+    void setCoordenadasLabel(int x, int y);
+    void setCoordenadasLabel(int x, int y, double ang);
 
     void processarFramesCalibracao(QImage frame);
     void doFpsCapture(double fps);
@@ -66,7 +67,7 @@ private:
     Ui::Principal *ui;    
     CalibraFrame* calibra;
     bool calibraClick;
-    Bola bola;
+    Objeto bola;
     RastrearObjeto* thObj;
 
     void appendEditValueSlider(QPlainTextEdit* ed, QString value);

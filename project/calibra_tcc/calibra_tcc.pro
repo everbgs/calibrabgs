@@ -18,8 +18,6 @@ SOURCES += main.cpp\
     cameralabel.cpp \
     calibraframe.cpp \
     objeto.cpp \
-    bola.cpp \
-    objetorastreavel.cpp \
     rastrearobjeto.cpp \
     camerathread.cpp
 
@@ -28,8 +26,6 @@ HEADERS  += principal.h \
     cameralabel.h \
     calibraframe.h \
     objeto.h \
-    bola.h \
-    objetorastreavel.h \
     rastrearobjeto.h \
     camerathread.h
 

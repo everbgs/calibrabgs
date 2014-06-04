@@ -28,8 +28,8 @@ void Principal::processarFramesLocalizacao(QImage frame)
 {
     if (!frame.isNull())
     {
-       ui->lbCameraJogo->setAlignment(Qt::AlignCenter);
-       ui->lbCameraJogo->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbCameraJogo->size()));
+       //ui->lbCameraJogo->setAlignment(Qt::AlignCenter);
+       ui->lbCameraJogo->setPixmap(QPixmap::fromImage(frame));
     }
 }
 
@@ -463,15 +463,33 @@ void Principal::on_pushButton_2_clicked()
     {
         /*Temporario para testes*/
         Camera* c = new Camera();
+        //c->openCamera("http://admin:admin@192.168.1.200/GetData.cgi?CH=2?resolution=800x592&req_fps=30&.mjpg");
         c->openCamera(0);
 
         CameraThread* th = new CameraThread(this);
         connect(th, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesLocalizacao(QImage)));
         th->setCamera(c);
 
-        this->thObj = new RastrearObjeto(this);
-        this->thObj->setObjeto(&this->bola);
+        this->thObj = new RastrearObjeto(&this->bola, this);
         connect(th, SIGNAL(setFrameCapture(cv::Mat)), this->thObj, SLOT(receberFrame(cv::Mat)));
+        connect(this->thObj, SIGNAL(getObjCoordenadas(int,int)), this, SLOT(setCoordenadasLabel(int, int)));
+        connect(this->thObj, SIGNAL(getObjCoordenadas(int,int,double)), this, SLOT(setCoordenadasLabel(int, int,double)));
+
+
         th->play();
     }
+}
+
+void Principal::setCoordenadasLabel(int x, int y)
+{
+    ui->edCoordenadas->appendPlainText(QString("X =" ) + QString::number(x).rightJustified(4, ' ') +
+                                       QString(" Y =" ) + QString::number(y).rightJustified(4, ' '));
+}
+
+void Principal::setCoordenadasLabel(int x, int y, double ang)
+{
+    ui->edCoordenadas->appendPlainText(QString("X =" ) + QString::number(x).rightJustified(4, ' ') +
+                                       QString(" Y =" ) + QString::number(y).rightJustified(4, ' ')+
+                                       QString(" Ang =" ) + QString::number(ang).rightJustified(4, ' ')
+                                       );
 }

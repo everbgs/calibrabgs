@@ -36,7 +36,7 @@ bool CameraThread::isStopped() const { return this->bStop; }
 
 void CameraThread::run()
 {
-    Mat frame;
+    Mat frame, oldFrame;
     QImage imagem;
 
     while (!this->bStop)
@@ -49,9 +49,10 @@ void CameraThread::run()
 
         emit setFrameCapture(frame);
 
-        cv::cvtColor(frame, frame, CV_BGR2RGB);
+        oldFrame = frame.clone();
+        cv::cvtColor(oldFrame, oldFrame, CV_BGR2RGB);
 
-        imagem = QImage((const unsigned char*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+        imagem = QImage((const unsigned char*)oldFrame.data, oldFrame.cols, oldFrame.rows, oldFrame.step, QImage::Format_RGB888);
         emit frameToQImage(imagem);
 
         this->__msleep(20);
