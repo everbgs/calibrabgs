@@ -6,7 +6,15 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-#define MAX_RUIDO_PERMITIDO 35
+#define MAX_RUIDO_PERMITIDO 93
+
+/*Descomentar linha abaixo, para utilizar a camera externa*/
+//#define CAMERA_EXTERNA
+#ifndef CAMERA_EXTERNA
+	#define __device 0
+#else
+	#define __device "http://admin:admin@192.168.1.200/GetData.cgi?CH=2?resolution=800x592&req_fps=30&.mjpg"
+#endif
 
 using namespace std;
 using namespace cv;
@@ -30,7 +38,7 @@ private:
 	char* getDateTime(void);
 
 	/*Retorna verdadeiro caso haja diferença entre as duas imagens*/
-	bool isDetectouMovimento(Mat& m1, Mat& m2);	
+	bool isDetectouMovimento(Mat& m1, Mat& m2, const char* nameTela);	
 
 public:	
 	~Filmadora();
@@ -62,24 +70,22 @@ char* Filmadora::getDateTime(void)
 	return tempo_str;
 }
 
-bool Filmadora::isDetectouMovimento(Mat& m1, Mat& m2)
-{
-	int nr = m1.rows;
-	int nc = m1.cols;
-	double val;
+bool Filmadora::isDetectouMovimento(Mat& m1, Mat& m2, const char* nameTela)
+{	
+	Mat g1, g2, res;
+	cvtColor(m1, g1, CV_BGR2GRAY);
+	cvtColor(m2, g2, CV_BGR2GRAY);
 
-	for (int i=0; i<nr; i++)
-	{
-		for (int l=0; l<nc; l++)		
-		{
-			val = (abs(m1.at<cv::Vec3b>(i,l)[0] - m2.at<cv::Vec3b>(i,l)[0]) +
-  				   abs(m1.at<cv::Vec3b>(i,l)[1] - m2.at<cv::Vec3b>(i,l)[1]) +
-				   abs(m1.at<cv::Vec3b>(i,l)[2] - m2.at<cv::Vec3b>(i,l)[2])) / 3;
-			if (val > MAX_RUIDO_PERMITIDO)
-				return true;
-		}
-	}
-	return false;
+	absdiff(g1, g2, res);
+	threshold(res, res, 10, 255, CV_THRESH_BINARY);
+
+	erode(res, res, 0);
+	dilate(res, res, 0, Point(-1,-1), 2);
+	erode(res, res, 0);	
+
+	imshow(nameTela, res);
+
+	return (countNonZero(res) > MAX_RUIDO_PERMITIDO);
 }
 
 void Filmadora::fecharCamera(void)
@@ -165,11 +171,13 @@ void Filmadora::gravarVideoCameraMovimento(string nomeArq)
 	waitKey(20); 
 	
     namedWindow ("Camera", CV_WINDOW_AUTOSIZE);     
+    namedWindow ("Movimento", CV_WINDOW_AUTOSIZE);     
+
 	puts("Pressione esc para sair.");     
 	while(this->camera.read(frame))
     {
 		blur(frame, frame, cv::Size(3,3));
-		achou = this->isDetectouMovimento(frame, frameAnt);	
+		achou = this->isDetectouMovimento(frame, frameAnt, "Movimento");	
 	
 	    frameAnt = frame.clone();
 
@@ -185,6 +193,8 @@ void Filmadora::gravarVideoCameraMovimento(string nomeArq)
         if (teclado == 27) break;
     }
 	destroyWindow("Camera");
+	destroyWindow("Movimento");
+
 	this->camera.release();
 	system_pause("Video Movimento");
 }
@@ -211,11 +221,11 @@ int main()
 		switch(op)
 		{
 			case 1:
-				film.setDispositivo(0);
+				film.setDispositivo(__device);
 				film.gravarVideoCamera(strName);				
 				break;				
 			case 2:
-				film.setDispositivo(0);
+				film.setDispositivo(__device);				
 				film.gravarVideoCameraMovimento(strName);				
 				break;				
 			case 3:
