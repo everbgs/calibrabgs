@@ -108,31 +108,53 @@ void Filmadora::setDispositivo(string s)
 
 void Filmadora::gravarVideoCamera(string nomeArq)
 {
+	/* Se a camera não estiver aberta */
 	if (!this->camera.isOpened())
-		throw "Erro ao abrir camera para captura";
+	{
+		fputs("Erro ao abrir camera para captura", stderr);
+		return;
+	}
 
+	/*Dimensões que o dispositivo está capturando*/
 	Size size = Size(this->camera.get(CV_CAP_PROP_FRAME_WIDTH),  
                      this->camera.get(CV_CAP_PROP_FRAME_HEIGHT));   	
+
+	/*Classe que manipula os frames capturados*/
     Mat frame; 	
+
+	/*Nome da Tela que exibirá a captura*/
     namedWindow ("Camera", CV_WINDOW_AUTOSIZE);     
 
+	/*Classe Responsavel pela gravação dos frames*/
 	nomeArq += ".avi";
 	VideoWriter video(nomeArq, CV_FOURCC('D','I','V','3'), 20, size);
+
+	/*Se não foi possivel criar o arquivo*/
     if(!video.isOpened())
-		throw "Não foi possivel criar o arquivo de video capturado";
+	{
+		fprintf(stderr, "Não foi possivel criar o arquivo de video capturado");
+		return;
+	}
  
 	char tecla;
-	puts("Pressione esc para sair."); 	
+	puts("Pressione esc sobre a janela para sair."); 	
+
+	/*Enquanto é possivel capturar frames*/
     while(this->camera.read(frame))
     {		
+		/*Grava frame no arquivo de video através */
 		video << frame;
+
+		/*Exibe a data e hora nos frames da tela que exibirá a captura*/
 		putText(frame, this->getDateTime(), Point(1, 40), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(255,255,255));
         imshow("Camera", frame);
 
+		/*esc para sair*/
 		tecla = waitKey(20); 
         if (tecla == 27) break;
     }
 	destroyWindow("Camera");
+	/*Fecha o dipositivo, pois ele não está sendo utilizada*/
 	this->camera.release();
 	system_pause("Video Normal");
 }
