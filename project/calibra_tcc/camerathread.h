@@ -15,10 +15,12 @@ class CameraThread : public QThread
 {
     Q_OBJECT
 private:
+    /*Atributos do tempo*/
     bool bStop;
     struct timespec ts;
-    Camera* cam;
 
+    /*Classe que manipula a camera*/
+    Camera* cam;
 
     void __msleep(int ms);
 
@@ -26,8 +28,7 @@ protected:
     void run();
 public:
     explicit CameraThread(QObject *parent = 0);
-
-    void setCamera(Camera* c);
+    ~CameraThread();
 
     void stop();
 

@@ -19,8 +19,10 @@
 using namespace std;
 using namespace cv;
 
+/*Limpa escritas no terminal*/
 void cls(void);
 
+/*Simula o system("pause") do windows no linux*/
 void system_pause(const char *msg);
 
 
@@ -73,35 +75,52 @@ char* Filmadora::getDateTime(void)
 bool Filmadora::isDetectouMovimento(Mat& m1, Mat& m2, const char* nameTela)
 {	
 	Mat g1, g2, res;
+	/*Converte as imagens para escala de cinza*/
 	cvtColor(m1, g1, CV_BGR2GRAY);
 	cvtColor(m2, g2, CV_BGR2GRAY);
 
+	/*Realiza a diferença em modulo e retorna o 
+	  resultado em outra matriz*/
 	absdiff(g1, g2, res);
+
+	/*threshold para realsar as linhas percebidas*/
 	threshold(res, res, 10, 255, CV_THRESH_BINARY);
 
+	/*erosão e dilatação para eliminar os falsos positivos*/
 	erode(res, res, 0);
 	dilate(res, res, 0, Point(-1,-1), 2);
 	erode(res, res, 0);	
 
+	/*exibe a diferença das imagens na tela*/
 	imshow(nameTela, res);
 
+	/*conta quantos pixels não zero possui a diferença
+	  das imagens, se for maior que o ruido permitido True
+	  caso o contrario false*/
 	return (countNonZero(res) > MAX_RUIDO_PERMITIDO);
 }
 
 void Filmadora::fecharCamera(void)
 {
+	/*Se a camera estiver aberta então fecha*/
 	if (this->camera.isOpened())
 		this->camera.release();	
 }
 
 void Filmadora::setDispositivo(int d)
 {
+	/*Fecha a camera primeiro antes de iniciar com o novo dispositivo,
+	  neste caso o dispositivo é um iteiro que respresenta a posição da
+	  camera acoplada ao computador	*/
 	this->fecharCamera();
 	this->camera.open(d);
 }
 
 void Filmadora::setDispositivo(string s)
 {
+	/*Fecha a camera primeiro antes de iniciar com o novo dispositivo,
+	  neste caso o dispositivo é uma string podendo ser uma camera externa
+  	  ou um arquivo de video*/
 	this->fecharCamera();
 	this->camera.open(s);
 }
@@ -156,69 +175,88 @@ void Filmadora::gravarVideoCamera(string nomeArq)
 	destroyWindow("Camera");
 	/*Fecha o dipositivo, pois ele não está sendo utilizada*/
 	this->camera.release();
-	system_pause("Video Normal");
 }
 
 
 void Filmadora::gravarVideoCameraMovimento(string nomeArq)
 {
+	/* Se a camera não estiver aberta */
 	if (!this->camera.isOpened())
 	{
 		fprintf(stderr, "Erro ao abrir dispositivo para captura");
 		return;
 	}		
 
+	/*Dimensões que o dispositivo está capturando*/
 	Size size = Size(this->camera.get(CV_CAP_PROP_FRAME_WIDTH),  
                      this->camera.get(CV_CAP_PROP_FRAME_HEIGHT));   	
 
-	
+	/*Classe Responsavel pela gravação dos frames*/
 	nomeArq += ".avi";
 	VideoWriter video(nomeArq, CV_FOURCC('D','I','V','3'), 20, size);
-
+	
+	/*Se não foi possivel criar o arquivo*/
     if(!video.isOpened())
 	{
 		fprintf(stderr, "Não foi possivel criar o video capturado");
 		return;
 	}		
 
-
+	/*Classe que manipula os frames capturados*/
 	Mat frame, frameAnt; 	
 	bool achou;	
 	char teclado;
 
-	if (!this->camera.read(frameAnt))
-		throw "Erro ao capturar frame inicial";
+	/*Se não conseguiu capturar o primeiro frame*/
+	if (!this->camera.read(frameAnt)) 
+	{
+		fprintf(stderr, "Erro ao capturar frame inicial");
+		return;
+	}
 
+	/*suaviza a imagem para melhor comparação*/
 	blur(frameAnt, frameAnt, cv::Size(3,3));
 	waitKey(20); 
-	
+
+	/*Nome das Telas que exibirão a captura e a diferença de imagens*/
     namedWindow ("Camera", CV_WINDOW_AUTOSIZE);     
     namedWindow ("Movimento", CV_WINDOW_AUTOSIZE);     
 
-	puts("Pressione esc para sair.");     
+	puts("Pressione esc para sair."); 
+	/*Enquanto é possivel capturar frames*/    
 	while(this->camera.read(frame))
     {
+		/*suaviza a imagem para melhor comparação*/
 		blur(frame, frame, cv::Size(3,3));
+
+		/*verifica se hou diferença entre o frame atual e anterior*/
 		achou = this->isDetectouMovimento(frame, frameAnt, "Movimento");	
 	
+		/*Guarda frame atual para ser usado como anterior*/
 	    frameAnt = frame.clone();
 
+		/*Exibe data e hora no frame atual*/
 		putText(frame, this->getDateTime(), Point(1, 40), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(255,255,255));
 		if (achou)
 		{
+			/*se houve diferrença então grava em video*/
 			video << frame;			
+			/*Exibe gravando apenas no visual para ilustrar a gravação*/
 			putText(frame, "Gravando...", Point(1, 20), FONT_HERSHEY_COMPLEX_SMALL, 1, Scalar(255,255,255));
 		}
-	
+		/*Exibe Frame*/
         imshow("Camera", frame);
+		
+		/*esc para sair*/
 		teclado = waitKey(20); 		
         if (teclado == 27) break;
     }
+	/*Destroy janelas*/
 	destroyWindow("Camera");
 	destroyWindow("Movimento");
 
+	/*fecha o dispositivo de captura*/
 	this->camera.release();
-	system_pause("Video Movimento");
 }
 
 int main()
@@ -244,11 +282,13 @@ int main()
 		{
 			case 1:
 				film.setDispositivo(__device);
-				film.gravarVideoCamera(strName);				
+				film.gravarVideoCamera(strName);
+				system_pause("Gravar video");				
 				break;				
 			case 2:
 				film.setDispositivo(__device);				
 				film.gravarVideoCameraMovimento(strName);				
+				system_pause("Gravar video movimento");							
 				break;				
 			case 3:
 				printf("Informe o nome do arquivo.avi que sera capturado(Max 100)\n-> ");
@@ -256,7 +296,8 @@ int main()
 				strFile[strlen(strFile)-1] = '\0';
 
 				film.setDispositivo(strFile);
-				film.gravarVideoCameraMovimento(strName);								
+				film.gravarVideoCameraMovimento(strName);	
+				system_pause("Gravar video movimento arquivo");							
 				break;				
 		}		
 	} while (op != 0);	
@@ -267,7 +308,7 @@ int main()
 void system_pause(const char *msg)
 {
 	char lixo[100];
-	printf("\nOperacaoo concluida: %s\nPressione qualquer tecla para sair...\n", msg);
+	printf("\nOperacaoo concluida: %s\nPressione enter para sair...\n", msg);
 	fgets(lixo, 100, stdin);
 }
 

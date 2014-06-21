@@ -6,6 +6,11 @@ RastrearObjeto::RastrearObjeto(Objeto *objetos, QObject *parent) :
     this->objetos = objetos;
 }
 
+int RastrearObjeto::cmp(double x, double y, double EPS)
+{
+    return ((x <= y + EPS) ? (x + EPS < y) ? -1 : 0 : 1);
+}
+
 void RastrearObjeto::setObjeto(Objeto* o) { this->objetos = o; }
 
 void RastrearObjeto::receberFrame(cv::Mat m)
@@ -19,42 +24,109 @@ void RastrearObjeto::receberFrame(cv::Mat m)
 
 void RastrearObjeto::run()
 {
-    //localizarBola();
+    localizarBola();
     localizarRobos();
 }
 
 void RastrearObjeto::localizarBola(void)
 {
+    /* Se existe a cor Laranja então continua */
     if (!this->objetos->isExistsColor(cores::LARANJA))
         return;
 
     vector<Vec3f> circulos;
     Mat gray;
-    int* cor = this->objetos->getColor(cores::LARANJA)._cores;
-    qDebug() << "MAX, R: " << cor[0] << " G: " << cor[1] << " B: " << cor[2];
-    qDebug() << "MIN, R: " << cor[3] << " G: " << cor[4] << " B: " << cor[5];
 
-    //MAX: 0..2, MIN: 3..5
-    inRange(this->matriz, Scalar(cor[5], cor[4], cor[3]), Scalar(cor[2], cor[1], cor[0] ), gray);
+    /* Retorna o vetor dos limites das cores */
+    int* cor = this->objetos->getColor(cores::LARANJA)._cores;
+
+    /*Limite de cores MAX: 0..2, MIN: 3..5*/
+    inRange(this->matriz, Scalar(cor[5], cor[4], cor[3]), Scalar(cor[2], cor[1],
+                                                                 cor[0] ), gray);
+
+    /*Suaviza a imagem para detectar os círculos*/
     GaussianBlur(gray, gray, cv::Size(9,9), 2,2);
 
-
+    /*Executa a transformada de Hough*/
     HoughCircles(gray, circulos, CV_HOUGH_GRADIENT, 2, gray.rows/8, 200, 100);
+
+    /*Se achou então emite um sinal das coordenadas*/
     if (circulos.size() > 0)
+        emit getObjCoordenadas("Bola: ", cvRound(circulos[0][0]), cvRound(circulos[0][1]));
+}
+
+void RastrearObjeto::appendVectorColor(string color, vp& estru)
+{
+    if (!this->objetos->isExistsColor(color))
+        return;
+
+    int *cor, max;
+    Mat gray;
+    vector<Vec3f> circulos;
+
+    cor = this->objetos->getColor(color)._cores;
+    inRange(this->matriz, Scalar(cor[5], cor[4], cor[3]), Scalar(cor[2], cor[1], cor[0]), gray);
+    GaussianBlur(gray, gray, cv::Size(9,9), 2,2);
+    HoughCircles(gray, circulos, CV_HOUGH_GRADIENT, 2, gray.rows/8, 200, 100);
+
+    max = circulos.size();
+    for (int i=0; i<max; i++)
     {
-        qDebug() << "Circulo";
-        emit getObjCoordenadas(cvRound(circulos[0][0]), cvRound(circulos[0][1]));
+        estru.push_back( make_pair( cvRound(circulos[i][0]),
+                                     cvRound(circulos[i][1])
+                                   ));
     }
 }
 
 void RastrearObjeto::localizarRobos()
 {
+    this->time.clear();
+    this->outros.clear();
 
-    if ((!this->objetos->isExistsColor(cores::AZUL))||
-        (!this->objetos->isExistsColor(cores::VERDE)))
-        return;
+    appendVectorColor(cores::AZUL, this->time);
+    appendVectorColor(cores::AMARELO, this->time);
+    appendVectorColor(cores::VERDE, this->outros);
+    appendVectorColor(cores::ROSA, this->outros);   
+
+    int i, j, mi, mj;
+    mi = this->time.size();
+    mj = this->outros.size();
 
 
+    int ix, x1, x2, y1, y2, a, b;
+    double euc, men, angulo;
+    for (i=0; i<mi; i++)
+    {
+        ix = -1;
+        men = 0;
+
+        x1 = time[i].first;
+        y1 = time[i].second;
+
+        for (j=0; j<mj; j++)
+        {
+            euc = (double) (__pow__(x1-outros[j].first) + __pow__(y1-outros[j].second));
+            euc = sqrt(euc);
+            if ((ix == -1) || (cmp(euc, men) == -1))
+            {
+                men = euc;
+                ix = j;
+            }
+        }
+        if (ix != -1)
+        {
+            x2 = outros[ix].first;
+            y2 = outros[ix].second;
+            a = x1 - x2;
+            b = y1 - y2;
+            angulo = atan2(b, a) * 180 / RastrearObjeto::PI;
+            emit getObjCoordenadas("Robo "+QString::number(i+1)+": ", x1, y1, angulo);
+        }
+        else
+            emit getObjCoordenadas("Robo "+QString::number(i+1)+": ", x1, y1);
+    }
+
+    /*
     vector<Vec3f> circulos1;
     Mat gray1, gray2;
     int* cor1 = this->objetos->getColor(cores::AZUL)._cores;
@@ -92,10 +164,10 @@ void RastrearObjeto::localizarRobos()
         b = y1 - y2;
         double angulo = atan2(b, a) * 180 / RastrearObjeto::PI;
         qDebug() << a << " " << b;
-        emit getObjCoordenadas(x1, y1, angulo);
+        emit getObjCoordenadas("Robo: ", x1, y1, angulo);
     }
     else
-        emit getObjCoordenadas(x1, y1);
+        emit getObjCoordenadas("Robo: ", x1, y1);
 
-    qDebug() << "X1: " << x1 << " Y1: " << y1 << " X2: " << x2 << " Y2: " << y2;
+    qDebug() << "X1: " << x1 << " Y1: " << y1 << " X2: " << x2 << " Y2: " << y2; */
 }

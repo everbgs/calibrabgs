@@ -4,11 +4,17 @@ CameraThread::CameraThread(QObject *parent) :
     QThread(parent)
 {
     this->bStop = true;
+
+    this->cam = new Camera();
+   //this->camera->openCamera("http://admin:admin@192.168.1.200/GetData.cgi?CH=2?resolution=800x592&req_fps=30&.mjpg");
+    this->cam->openCamera(0);
+
 }
 
-void CameraThread::setCamera(Camera *c)
+CameraThread::~CameraThread()
 {
-    this->cam = c;
+    this->bStop = true;
+    delete this->cam;
 }
 
 void CameraThread::__msleep(int ms)
@@ -17,7 +23,6 @@ void CameraThread::__msleep(int ms)
     this->ts.tv_nsec = (ms % 1000) * 1000 * 1000;
     nanosleep(&ts, NULL);
 }
-
 
 void CameraThread::stop() { this->bStop = true; }
 
@@ -56,5 +61,6 @@ void CameraThread::run()
         emit frameToQImage(imagem);
 
         this->__msleep(20);
-    }
+    }    
+    cam->stopCamera();
 }

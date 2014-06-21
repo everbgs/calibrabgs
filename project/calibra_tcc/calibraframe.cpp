@@ -37,12 +37,6 @@ void CalibraFrame::run()
     int raio;
     unsigned int i;
 
-    int cnt = 0;
-    time_t start, end;
-    double sec, fps;
-
-    time(&start);
-
     while (!this->bStop)
     {        
         {
@@ -56,38 +50,44 @@ void CalibraFrame::run()
             continue;
         }        
 
-        cv::inRange(frame, cv::Scalar(BMin, GMin, RMin), cv::Scalar(BMax, GMax, RMax), dst);
+        /*Threshold para encontrar a região de interesse*/
+        cv::inRange(frame, cv::Scalar(BMin, GMin, RMin), cv::Scalar(BMax, GMax, RMax),
+                                                                                 dst);
+
+        /*Suavização da imagem para processamentos posteriores */
         cv::GaussianBlur(dst, dst, cv::Size(9,9), 2,2);
 
+        /*Se é para mostrar os frames no formato RGB*/
         if (this->visaoColor)
         {
+
+            /*Se foi marcado para utilizar a TH*/
             if (this->exibe_circulo)
             {
+                /*Aplica a TH sobre a região de interrese */
                 cv::HoughCircles(dst, cir, CV_HOUGH_GRADIENT, 2, dst.rows/8, 200, 100);
 
+                /*Se retornar algum circulo então, desenha sobre o frame atual os mesmos*/
                 for(i = 0; i < cir.size(); i++ )
                 {
                     center.x = cvRound(cir[i][0]);
                     center.y = cvRound(cir[i][1]);
                     raio = cvRound(cir[i][2]);                   
                     circle(frame, center, raio, Scalar(0,0,255), 2, CV_AA);
+                    //qDebug() << "X: " << center.x << " Y: " << center.y << " R: " << raio;
                 }
             }
+            /*converte a cor para se adequar a estrutura QT*/
             cv::cvtColor(frame, frame, CV_BGR2RGB);
             imagem = QImage((const unsigned char*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
         }
-        else
+        else /*Mostra somente a região de interesse da calibração */
             imagem = QImage(dst.data, dst.cols, dst.rows, dst.step, QImage::Format_Indexed8);
 
-        //FPS
-        time(&end);
-        if (cnt == INT_MAX) cnt = 0;
-        ++cnt;
-        sec = difftime(end,start);
-        fps = cnt/sec;
-
-        emit fpsCapture(fps);
+        /*Exibe o frame na tela principal*/
         emit frameToQImage(imagem);
+
+        /*Espera 20 ms */
         this->msleep(20);
     }
     this->camera->stopCamera();

@@ -12,6 +12,8 @@ Principal::Principal(QWidget *parent) :
     connect(ui->lbImageCamera, SIGNAL(onMouseDown(int,int)), this, SLOT(doOnMouseDownImage(int,int)));
 
     this->calibra = NULL;
+    this->thObj = NULL;
+    this->camThread = NULL;
 }
 
 Principal::~Principal()
@@ -225,7 +227,6 @@ void Principal::on_btnIniciar_clicked()
         this->calibra = new CalibraFrame(this);
         this->calibra->setExibeCirculo(ui->cbkCirculo->isChecked());
         connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
-        connect(this->calibra, SIGNAL(fpsCapture(double)), this, SLOT(doFpsCapture(double)));
         this->calibra->play();
     }
 }
@@ -247,11 +248,6 @@ void Principal::processarFramesCalibracao(QImage frame)
          //ui->lbCameraJogo->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbCameraJogo->size()));
 
     }
-}
-
-void Principal::doFpsCapture(double fps)
-{
-    ui->lbFPS->setText(QString::number(fps, 'g', 4));
 }
 
 void Principal::doOnMouseDownImage(int x, int y)
@@ -454,41 +450,59 @@ void Principal::on_pushButton_clicked()
 
 void Principal::on_pushButton_2_clicked()
 {
-    if (ui->pushButton_2->text() == "Parado")
+
+    /*if (ui->btnIniciar->text() == "Parado")
     {
-        /*tratar fechamento da camera*/
-        ui->pushButton_2->setText("Iniciar");        
+        ui->btnIniciar->setText("Iniciar");
+        if (this->calibra->isRunning())
+            this->calibra->stop();
     }
     else
     {
-        /*Temporario para testes*/
-        Camera* c = new Camera();
-        //c->openCamera("http://admin:admin@192.168.1.200/GetData.cgi?CH=2?resolution=800x592&req_fps=30&.mjpg");
-        c->openCamera(0);
+        ui->btnIniciar->setText("Parado");
+        delete this->calibra;
+        this->calibra = new CalibraFrame(this);
+        this->calibra->setExibeCirculo(ui->cbkCirculo->isChecked());
+        connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
+        this->calibra->play();
+    }*/
 
-        CameraThread* th = new CameraThread(this);
-        connect(th, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesLocalizacao(QImage)));
-        th->setCamera(c);
+    if (ui->pushButton_2->text() == "Parar")
+    {
+        /*tratar fechamento da camera*/
+        ui->pushButton_2->setText("Iniciar");
+        if (this->camThread->isRunning())
+            this->camThread->stop();
+    }
+    else
+    {    
+        ui->pushButton_2->setText("Parar");
+        delete camThread;
 
-        this->thObj = new RastrearObjeto(&this->bola, this);
-        connect(th, SIGNAL(setFrameCapture(cv::Mat)), this->thObj, SLOT(receberFrame(cv::Mat)));
-        connect(this->thObj, SIGNAL(getObjCoordenadas(int,int)), this, SLOT(setCoordenadasLabel(int, int)));
-        connect(this->thObj, SIGNAL(getObjCoordenadas(int,int,double)), this, SLOT(setCoordenadasLabel(int, int,double)));
+        camThread = new CameraThread(this);
+        connect(camThread, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesLocalizacao(QImage)));
+        if (!this->thObj)
+            this->thObj = new RastrearObjeto(&this->bola, this);
+        connect(camThread, SIGNAL(setFrameCapture(cv::Mat)), this->thObj, SLOT(receberFrame(cv::Mat)));
+        connect(this->thObj, SIGNAL(getObjCoordenadas(QString, int, int)), this, SLOT(setCoordenadasLabel(QString, int, int)));
+        connect(this->thObj, SIGNAL(getObjCoordenadas(QString, int, int, double)), this, SLOT(setCoordenadasLabel(QString, int, int, double)));
 
-
-        th->play();
+        camThread->play();
     }
 }
 
-void Principal::setCoordenadasLabel(int x, int y)
+void Principal::setCoordenadasLabel(QString nome, int x, int y)
 {
-    ui->edCoordenadas->appendPlainText(QString("X =" ) + QString::number(x).rightJustified(4, ' ') +
+    ui->edCoordenadas->appendPlainText(nome +
+                                       QString("X =" ) + QString::number(x).rightJustified(4, ' ') +
                                        QString(" Y =" ) + QString::number(y).rightJustified(4, ' '));
 }
 
-void Principal::setCoordenadasLabel(int x, int y, double ang)
+void Principal::setCoordenadasLabel(QString nome, int x, int y, double ang)
 {
-    ui->edCoordenadas->appendPlainText(QString("X =" ) + QString::number(x).rightJustified(4, ' ') +
+
+    ui->edCoordenadas->appendPlainText(nome +
+                                       QString("X =" ) + QString::number(x).rightJustified(4, ' ') +
                                        QString(" Y =" ) + QString::number(y).rightJustified(4, ' ')+
                                        QString(" Ang =" ) + QString::number(ang).rightJustified(4, ' ')
                                        );

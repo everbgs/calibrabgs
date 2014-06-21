@@ -28,11 +28,10 @@ public:
 
 public slots:
     void processarFramesLocalizacao(QImage frame);
-    void setCoordenadasLabel(int x, int y);
-    void setCoordenadasLabel(int x, int y, double ang);
+    void setCoordenadasLabel(QString nome, int x, int y);
+    void setCoordenadasLabel(QString nome, int x, int y, double ang);
 
-    void processarFramesCalibracao(QImage frame);
-    void doFpsCapture(double fps);
+    void processarFramesCalibracao(QImage frame);    
 
     void doOnMouseDownImage(int x, int y);
 
@@ -69,6 +68,7 @@ private:
     bool calibraClick;
     Objeto bola;
     RastrearObjeto* thObj;
+    CameraThread* camThread;
 
     void appendEditValueSlider(QPlainTextEdit* ed, QString value);
     void appendEditValueSlider(QSlider** sliders, QPlainTextEdit** edDestino, int n);
