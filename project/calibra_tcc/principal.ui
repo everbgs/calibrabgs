@@ -1551,9 +1551,9 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>10</y>
+         <y>41</y>
          <width>711</width>
-         <height>592</height>
+         <height>561</height>
         </rect>
        </property>
        <property name="autoFillBackground">
@@ -1613,6 +1613,32 @@
        </property>
        <property name="text">
         <string>Coordenadas dos objetos</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_12">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>67</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>FPS:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lbFps">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>10</y>
+         <width>67</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>...</string>
        </property>
       </widget>
      </widget>

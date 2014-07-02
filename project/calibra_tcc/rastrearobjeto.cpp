@@ -24,7 +24,7 @@ void RastrearObjeto::receberFrame(cv::Mat m)
 
 void RastrearObjeto::run()
 {
-    localizarBola();
+    //localizarBola();
     localizarRobos();
 }
 
@@ -83,6 +83,7 @@ void RastrearObjeto::localizarRobos()
     this->time.clear();
     this->outros.clear();
 
+    /*Encontra todos os circulos utilizando a transformada de houg*/
     appendVectorColor(cores::AZUL, this->time);
     appendVectorColor(cores::AMARELO, this->time);
     appendVectorColor(cores::VERDE, this->outros);
@@ -95,34 +96,44 @@ void RastrearObjeto::localizarRobos()
 
     int ix, x1, x2, y1, y2, a, b;
     double euc, men, angulo;
+
+    /*Para as cores que representam os times (Azul, Amarelo) */
     for (i=0; i<mi; i++)
     {
         ix = -1;
-        men = 0;
+        men = 999999;
 
         x1 = time[i].first;
         y1 = time[i].second;
 
+        /*Para as cores secundarias (Rosa, Verde) */
         for (j=0; j<mj; j++)
         {
+            /*Executa a distancia euclidiana para saber o circulo
+              mais proximo da etiqueta do robô */
             euc = (double) (__pow__(x1-outros[j].first) + __pow__(y1-outros[j].second));
             euc = sqrt(euc);
-            if ((ix == -1) || (cmp(euc, men) == -1))
+
+            /*Se a distancia for menor que 65 e for menor que a atual menor*/
+            if ((euc < 65) && (cmp(euc, men) == -1))
             {
                 men = euc;
                 ix = j;
             }
         }
+
+        /*Se achou então executa a equação de
+         Gonçalvez para achar a direção*/
         if (ix != -1)
         {
             x2 = outros[ix].first;
             y2 = outros[ix].second;
             a = x1 - x2;
             b = y1 - y2;
-            angulo = atan2(b, a) * 180 / RastrearObjeto::PI;
+            angulo = atan2(b, a)* 180 / RastrearObjeto::PI;
             emit getObjCoordenadas("Robo "+QString::number(i+1)+": ", x1, y1, angulo);
         }
-        else
+        else /*Se não achou apenas retorna as coordenadas do circulo central*/
             emit getObjCoordenadas("Robo "+QString::number(i+1)+": ", x1, y1);
     }
 

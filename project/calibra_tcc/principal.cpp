@@ -287,6 +287,11 @@ void Principal::doOnMouseDownImage(int x, int y)
     this->calibraClick = false;
 }
 
+void Principal::setLabelFps(double fps)
+{
+    ui->lbFps->setText(QString::number(fps, 'g', '4'));
+}
+
 _corcalibra Principal::getFormatCorCalibra(QPlainTextEdit** edts)
 {
     _corcalibra colors;
@@ -451,22 +456,6 @@ void Principal::on_pushButton_clicked()
 void Principal::on_pushButton_2_clicked()
 {
 
-    /*if (ui->btnIniciar->text() == "Parado")
-    {
-        ui->btnIniciar->setText("Iniciar");
-        if (this->calibra->isRunning())
-            this->calibra->stop();
-    }
-    else
-    {
-        ui->btnIniciar->setText("Parado");
-        delete this->calibra;
-        this->calibra = new CalibraFrame(this);
-        this->calibra->setExibeCirculo(ui->cbkCirculo->isChecked());
-        connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
-        this->calibra->play();
-    }*/
-
     if (ui->pushButton_2->text() == "Parar")
     {
         /*tratar fechamento da camera*/
@@ -483,6 +472,9 @@ void Principal::on_pushButton_2_clicked()
         connect(camThread, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesLocalizacao(QImage)));
         if (!this->thObj)
             this->thObj = new RastrearObjeto(&this->bola, this);
+
+        connect(camThread, SIGNAL(getFPSCam(double)), this, SLOT(setLabelFps(double)));
+
         connect(camThread, SIGNAL(setFrameCapture(cv::Mat)), this->thObj, SLOT(receberFrame(cv::Mat)));
         connect(this->thObj, SIGNAL(getObjCoordenadas(QString, int, int)), this, SLOT(setCoordenadasLabel(QString, int, int)));
         connect(this->thObj, SIGNAL(getObjCoordenadas(QString, int, int, double)), this, SLOT(setCoordenadasLabel(QString, int, int, double)));

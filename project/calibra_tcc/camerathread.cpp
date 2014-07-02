@@ -6,7 +6,7 @@ CameraThread::CameraThread(QObject *parent) :
     this->bStop = true;
 
     this->cam = new Camera();
-   //this->camera->openCamera("http://admin:admin@192.168.1.200/GetData.cgi?CH=2?resolution=800x592&req_fps=30&.mjpg");
+   //this->cam->openCamera("http://admin:admin@192.168.1.200/GetData.cgi?CH=2?resolution=800x592&req_fps=30&.mjpg");
     this->cam->openCamera(0);
 
 }
@@ -43,7 +43,11 @@ void CameraThread::run()
 {
     Mat frame, oldFrame;
     QImage imagem;
+    unsigned int cnt = 0;
+    time_t start, end;
 
+
+  //  time(&start);
     while (!this->bStop)
     {
         if (!this->cam->readFrame(frame))
@@ -59,6 +63,11 @@ void CameraThread::run()
 
         imagem = QImage((const unsigned char*)oldFrame.data, oldFrame.cols, oldFrame.rows, oldFrame.step, QImage::Format_RGB888);
         emit frameToQImage(imagem);
+
+       // time(&end);
+     //   ++cnt;
+
+       // emit getFPSCam(cnt / difftime(end, start));
 
         this->__msleep(20);
     }    

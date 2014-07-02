@@ -35,6 +35,8 @@ public slots:
 
     void doOnMouseDownImage(int x, int y);
 
+    void setLabelFps(double fps);
+
 private slots:
     /* Eventos Visuais */
     void on_sliderMaxR_valueChanged(int value);

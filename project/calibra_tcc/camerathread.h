@@ -39,6 +39,7 @@ public:
 signals:
     void setFrameCapture(cv::Mat m);
     void frameToQImage(QImage image);
+    void getFPSCam(double fps);
 
 };
 

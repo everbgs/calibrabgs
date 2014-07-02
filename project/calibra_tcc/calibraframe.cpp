@@ -7,7 +7,7 @@ CalibraFrame::CalibraFrame(QObject *parent) : QThread(parent)
     this->exibe_circulo = false;
 
     this->camera = new Camera();
-   // this->camera->openCamera("http://admin:admin@192.168.1.200/GetData.cgi?CH=2?resolution=800x592&req_fps=30&.mjpg");
+    //this->camera->openCamera("http://admin:admin@192.168.1.200/GetData.cgi?CH=2?resolution=800x592&req_fps=30&.mjpg");
     this->camera->openCamera(0);
 
 
