@@ -7,27 +7,13 @@
 #include <sstream>
 #include <string>
 #include <stdlib.h>
+#include "typesapp.h"
 
 using namespace std;
 
-namespace cores {
-    const string AZUL = "AZUL";
-    const string AMARELO = "AMARELO";
-    const string VERDE = "VERDE";
-    const string ROSA = "ROSA";
-    const string LARANJA = "LARANJA";   
-}
-
-//Estrutura para guardar valores Max e Min das cores
-struct _corcalibra {    
-    //MAX: 0..2, MIN: 3..5
-    int _cores[6];
-};
-
 class Objeto
 {
-
-private:
+protected:
     //Mapa das cores, Key = Cor, Value = RGB Max, Min
     map<string, _corcalibra> mapaCores;
 public:

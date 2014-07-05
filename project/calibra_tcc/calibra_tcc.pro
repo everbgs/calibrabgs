@@ -17,13 +17,19 @@ SOURCES += main.cpp\
     camera.cpp \
     cameralabel.cpp \
     calibraframe.cpp \
-    objeto.cpp
+    objeto.cpp \
+    rastrearobjeto.cpp \
+    camerathread.cpp \
+    typesapp.cpp
 
 HEADERS  += principal.h \
     camera.h \
     cameralabel.h \
     calibraframe.h \
-    objeto.h
+    objeto.h \
+    rastrearobjeto.h \
+    camerathread.h \
+    typesapp.h
 
 FORMS    += principal.ui
 

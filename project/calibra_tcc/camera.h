@@ -11,14 +11,23 @@ class Camera
 {
 
 private:
-    VideoCapture* camera;
+    /* Classe responsavel pela captura*/
+
 public:
+      VideoCapture* camera;
     Camera();
     ~Camera();
 
+    /*verifica se a camera está aberta*/
     bool isCameraOpen(void);
+
+    /*Para a camera de captura*/
     void stopCamera(void);
+
+    /*Verifica se foi póssivel ler um frame*/
     bool readFrame(Mat& frame);
+
+    /*Abre camera para captura*/
     void openCamera(int device);
     void openCamera(string device);
 };

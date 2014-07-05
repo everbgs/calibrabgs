@@ -11,17 +11,46 @@ Principal::Principal(QWidget *parent) :
     ui->setupUi(this);    
     connect(ui->lbImageCamera, SIGNAL(onMouseDown(int,int)), this, SLOT(doOnMouseDownImage(int,int)));
 
-    this->calibra = NULL;
+    this->camera = new Camera();
+
+    this->calibra = new CalibraFrame(this);
+    this->calibra->setCamera(this->camera);
+    connect(this->calibra, SIGNAL(statusMethodThread(ThreadType)), this, SLOT(setStatusThread(ThreadType)));
+    connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
+
+    this->rastrearObj = new RastrearObjeto(&this->myObject, this);
+    connect(this->rastrearObj, SIGNAL(getObjCoordenadas(QString, int, int)), this, SLOT(setCoordenadasLabel(QString, int, int)));
+    connect(this->rastrearObj, SIGNAL(getObjCoordenadas(QString, int, int, double)), this, SLOT(setCoordenadasLabel(QString, int, int, double)));
+
+    this->camThread = new CameraThread(this);
+    this->camThread->setCamera(this->camera);
+    connect(this->camThread, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesLocalizacao(QImage)));
+    connect(this->camThread, SIGNAL(statusMethodThread(ThreadType)), this, SLOT(setStatusThread(ThreadType)));
+    connect(this->camThread, SIGNAL(setFrameCapture(cv::Mat)), this->rastrearObj, SLOT(receberFrame(cv::Mat)));
 }
 
 Principal::~Principal()
-{    
-    if (this->calibra)
-    {
+{        
+    while (this->calibra->isRunning())
         this->calibra->stop();
-        delete this->calibra;
-    }
+    while (this->camThread->isRunning())
+        this->camThread->stop();
+
+    delete this->calibra;
+    delete this->camThread;
+    delete this->rastrearObj;
+    delete this->camera;
+
     delete ui;
+}
+
+void Principal::processarFramesLocalizacao(QImage frame)
+{
+    if (!frame.isNull())
+    {
+       //ui->lbCameraJogo->setAlignment(Qt::AlignCenter);
+       ui->lbCameraJogo->setPixmap(QPixmap::fromImage(frame));
+    }
 }
 
 void Principal::changeThreadCalibra(int value, int channel, int range)
@@ -202,23 +231,22 @@ void Principal::on_btnCarregar_clicked()
 }
 
 void Principal::on_btnIniciar_clicked()
-{
+{    
+
     if (ui->btnIniciar->text() == "Parado")
     {
         ui->btnIniciar->setText("Iniciar");
-        if (this->calibra->isRunning())
-            this->calibra->stop();
+        this->calibra->stop();
     }
     else
     {
-        ui->btnIniciar->setText("Parado");
-        delete this->calibra;
-        this->calibra = new CalibraFrame(this);
-        this->calibra->setExibeCirculo(ui->cbkCirculo->isChecked());
-        connect(this->calibra, SIGNAL(frameToQImage(QImage)), this, SLOT(processarFramesCalibracao(QImage)));
-        connect(this->calibra, SIGNAL(fpsCapture(double)), this, SLOT(doFpsCapture(double)));
-        this->calibra->play();
-    }
+        if (!this->camera->isCameraOpen())
+        {
+            ui->btnIniciar->setText("Parado");
+            this->calibra->setExibeCirculo(ui->cbkCirculo->isChecked());
+            this->calibra->play();
+        }
+    }    
 }
 
 void Principal::on_btnMudarVisao_clicked()
@@ -231,24 +259,15 @@ void Principal::processarFramesCalibracao(QImage frame)
 {
     if (!frame.isNull())
     {               
-       // ui->lbImageCamera->setAlignment(Qt::AlignCenter);
-       // ui->lbImageCamera->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbImageCamera->size()));
-
-         ui->lbCameraJogo->setAlignment(Qt::AlignCenter);
-         ui->lbCameraJogo->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbCameraJogo->size()));
-
+       ui->lbImageCamera->setAlignment(Qt::AlignCenter);
+       ui->lbImageCamera->setPixmap(QPixmap::fromImage(frame).scaled(ui->lbImageCamera->size()));
     }
-}
-
-void Principal::doFpsCapture(double fps)
-{
-    ui->lbFPS->setText(QString::number(fps, 'g', 4));
 }
 
 void Principal::doOnMouseDownImage(int x, int y)
 {
-    if (!ui->gbPerspectiva->isChecked())
-        return;
+    if ((!ui->gbPerspectiva->isChecked())||
+        (!ui->lbImageCamera->pixmap())) return;
 
     this->calibraClick = true;
 
@@ -280,6 +299,25 @@ void Principal::doOnMouseDownImage(int x, int y)
         }
     }
     this->calibraClick = false;
+}
+
+void Principal::setLabelFps(double fps)
+{
+    ui->lbFps->setText(QString::number(fps, 'g', '4'));
+}
+
+void Principal::setStatusThread(ThreadType m)
+{
+    if (m == CAL_FIRST)
+    {
+        if (!this->camera->isCameraOpen())
+            this->camera->openCamera(__device);
+    }
+    else
+    {
+        if (this->camera->isCameraOpen())
+            this->camera->stopCamera();
+    }
 }
 
 _corcalibra Principal::getFormatCorCalibra(QPlainTextEdit** edts)
@@ -347,7 +385,7 @@ void Principal::on_btnExportar_clicked()
 
 void Principal::on_btnImportar_clicked()
 {
-    QString dir =  QFileDialog::getOpenFileName(this, "Salvar arquivo", "", "Text files (*.txt)",0);
+    QString dir =  QFileDialog::getOpenFileName(this, "Abrir arquivo", "", "Text files (*.txt)",0);
     if (dir != "")
     {
         Objeto obj;
@@ -431,4 +469,51 @@ void Principal::on_cbkCirculo_clicked()
     if (this->calibra)
         this->calibra->setExibeCirculo(ui->cbkCirculo->isChecked());
 
+}
+
+void Principal::setCoordenadasLabel(QString nome, int x, int y)
+{
+    ui->edCoordenadas->appendPlainText(nome +
+                                       QString("X =" ) + QString::number(x).rightJustified(4, ' ') +
+                                       QString(" Y =" ) + QString::number(y).rightJustified(4, ' '));
+}
+
+void Principal::setCoordenadasLabel(QString nome, int x, int y, double ang)
+{
+
+    ui->edCoordenadas->appendPlainText(nome +
+                                       QString("X =" ) + QString::number(x).rightJustified(4, ' ') +
+                                       QString(" Y =" ) + QString::number(y).rightJustified(4, ' ')+
+                                       QString(" Ang =" ) + QString::number(ang).rightJustified(4, ' ')
+                                       );
+}
+
+void Principal::on_btnLocalizar_clicked()
+{
+    if (ui->btnLocalizar->text() == "Parar")
+    {
+        ui->btnLocalizar->setText("Iniciar");
+        this->camThread->stop();
+    }
+    else
+    {
+        if (!this->camera->isCameraOpen())
+        {
+            ui->btnLocalizar->setText("Parar");
+            this->camThread->play();
+        }
+    }
+
+}
+
+void Principal::on_btnImportLoc_clicked()
+{
+
+    QString dir =  QFileDialog::getOpenFileName(this, "Abrir arquivo", "", "Text files (*.txt)",0);
+    if (dir != "")
+    {
+        this->myObject.importarArquivo(dir.toStdString());
+        QString file = dir.section("/",-1,-1);
+        ui->lbArqUsado->setText("Arquivo: "+file);
+    }
 }

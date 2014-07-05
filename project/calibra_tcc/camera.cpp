@@ -16,7 +16,7 @@ bool Camera::isCameraOpen(void)
 }
 
 void Camera::stopCamera()
-{    
+{
     this->camera->release();
 }
 
