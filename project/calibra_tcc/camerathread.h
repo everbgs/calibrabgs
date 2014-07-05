@@ -8,6 +8,8 @@
 #include <QThread>
 #include <time.h>
 #include <QImage>
+#include <QMutex>
+#include "typesapp.h"
 
 using namespace cv;
 
@@ -16,11 +18,14 @@ class CameraThread : public QThread
     Q_OBJECT
 private:
     /*Atributos do tempo*/
-    bool bStop;
     struct timespec ts;
 
     /*Classe que manipula a camera*/
     Camera* cam;
+
+    bool bStop;
+
+    QMutex mutex;
 
     void __msleep(int ms);
 
@@ -28,7 +33,6 @@ protected:
     void run();
 public:
     explicit CameraThread(QObject *parent = 0);
-    ~CameraThread();
 
     void stop();
 
@@ -36,11 +40,12 @@ public:
 
     bool isStopped() const;
 
+    void setCamera(Camera* c);
+
 signals:
     void setFrameCapture(cv::Mat m);
     void frameToQImage(QImage image);
-    void getFPSCam(double fps);
-
+    void statusMethodThread(ThreadType m);
 };
 
 #endif // CAMERATHREAD_H

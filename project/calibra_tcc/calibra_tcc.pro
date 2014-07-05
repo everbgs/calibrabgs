@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     calibraframe.cpp \
     objeto.cpp \
     rastrearobjeto.cpp \
-    camerathread.cpp
+    camerathread.cpp \
+    typesapp.cpp
 
 HEADERS  += principal.h \
     camera.h \
@@ -27,7 +28,8 @@ HEADERS  += principal.h \
     calibraframe.h \
     objeto.h \
     rastrearobjeto.h \
-    camerathread.h
+    camerathread.h \
+    typesapp.h
 
 FORMS    += principal.ui
 

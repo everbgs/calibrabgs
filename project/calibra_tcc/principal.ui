@@ -20,7 +20,7 @@
    <item>
     <widget class="QTabWidget" name="pgVisao">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabCalibra">
       <property name="toolTip">
@@ -1435,15 +1435,18 @@
         <enum>QFrame::Sunken</enum>
        </property>
        <property name="text">
-        <string>Camera de Captura</string>
+        <string>Câmera de Captura</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
       <widget class="QGroupBox" name="gbPerspectiva">
        <property name="geometry">
         <rect>
-         <x>130</x>
+         <x>170</x>
          <y>500</y>
-         <width>311</width>
+         <width>261</width>
          <height>131</height>
         </rect>
        </property>
@@ -1468,8 +1471,8 @@
        <widget class="QRadioButton" name="rbRGBMin">
         <property name="geometry">
          <rect>
-          <x>200</x>
-          <y>80</y>
+          <x>170</x>
+          <y>60</y>
           <width>108</width>
           <height>26</height>
          </rect>
@@ -1490,8 +1493,8 @@
        <widget class="QRadioButton" name="rbRGBMax">
         <property name="geometry">
          <rect>
-          <x>200</x>
-          <y>40</y>
+          <x>170</x>
+          <y>30</y>
           <width>108</width>
           <height>26</height>
          </rect>
@@ -1528,6 +1531,10 @@
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
+       <zorder>rbRGBMin</zorder>
+       <zorder>rbRGBMax</zorder>
+       <zorder>lbRGBPers</zorder>
+       <zorder>cbkCirculo</zorder>
       </widget>
       <widget class="QCheckBox" name="cbkCirculo">
        <property name="geometry">
@@ -1563,14 +1570,17 @@
         <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="text">
-        <string>Camera do Jogo</string>
+        <string>Câmera de Captura</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="btnImportLoc">
        <property name="geometry">
         <rect>
-         <x>820</x>
-         <y>10</y>
+         <x>733</x>
+         <y>41</y>
          <width>95</width>
          <height>31</height>
         </rect>
@@ -1579,11 +1589,11 @@
         <string>Importar</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="btnLocalizar">
        <property name="geometry">
         <rect>
-         <x>820</x>
-         <y>50</y>
+         <x>733</x>
+         <y>80</y>
          <width>95</width>
          <height>31</height>
         </rect>
@@ -1595,9 +1605,9 @@
       <widget class="QPlainTextEdit" name="edCoordenadas">
        <property name="geometry">
         <rect>
-         <x>740</x>
+         <x>733</x>
          <y>210</y>
-         <width>301</width>
+         <width>311</width>
          <height>391</height>
         </rect>
        </property>
@@ -1605,7 +1615,7 @@
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>780</x>
+         <x>800</x>
          <y>170</y>
          <width>191</width>
          <height>21</height>
@@ -1639,6 +1649,19 @@
        </property>
        <property name="text">
         <string>...</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lbArqUsado">
+       <property name="geometry">
+        <rect>
+         <x>832</x>
+         <y>45</y>
+         <width>231</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Nenhum Arquivo Utilizado!</string>
        </property>
       </widget>
      </widget>

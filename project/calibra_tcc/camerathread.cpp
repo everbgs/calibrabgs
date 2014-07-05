@@ -3,18 +3,7 @@
 CameraThread::CameraThread(QObject *parent) :
     QThread(parent)
 {
-    this->bStop = true;
-
-    this->cam = new Camera();
-   //this->cam->openCamera("http://admin:admin@192.168.1.200/GetData.cgi?CH=2?resolution=800x592&req_fps=30&.mjpg");
-    this->cam->openCamera(0);
-
-}
-
-CameraThread::~CameraThread()
-{
-    this->bStop = true;
-    delete this->cam;
+    this->bStop = true;    
 }
 
 void CameraThread::__msleep(int ms)
@@ -24,7 +13,12 @@ void CameraThread::__msleep(int ms)
     nanosleep(&ts, NULL);
 }
 
-void CameraThread::stop() { this->bStop = true; }
+void CameraThread::stop()
+{
+    this->mutex.lock();
+    this->bStop = true;
+    this->mutex.unlock();
+}
 
 void CameraThread::play()
 {
@@ -32,22 +26,26 @@ void CameraThread::play()
     {
         if (this->isStopped())
             this->bStop = false;
-        //Inicia o run(), se estiver em execução não faz nada
+
+        emit statusMethodThread(CAL_FIRST);
         start();
     }
 }
 
 bool CameraThread::isStopped() const { return this->bStop; }
 
+void CameraThread::setCamera(Camera *c)
+{
+    this->cam = c;
+}
+
 void CameraThread::run()
 {
     Mat frame, oldFrame;
     QImage imagem;
-    unsigned int cnt = 0;
-    time_t start, end;
 
+    this->cam->openCamera(__device);
 
-  //  time(&start);
     while (!this->bStop)
     {
         if (!this->cam->readFrame(frame))
@@ -58,18 +56,11 @@ void CameraThread::run()
 
         emit setFrameCapture(frame);
 
-        oldFrame = frame.clone();
-        cv::cvtColor(oldFrame, oldFrame, CV_BGR2RGB);
-
+        cv::cvtColor(frame, oldFrame, CV_BGR2RGB);
         imagem = QImage((const unsigned char*)oldFrame.data, oldFrame.cols, oldFrame.rows, oldFrame.step, QImage::Format_RGB888);
         emit frameToQImage(imagem);
 
-       // time(&end);
-     //   ++cnt;
-
-       // emit getFPSCam(cnt / difftime(end, start));
-
         this->__msleep(20);
     }    
-    cam->stopCamera();
+     emit statusMethodThread(CAL_FINISH);
 }

@@ -10,30 +10,24 @@
 #include <math.h>
 #include <vector>
 #include "objeto.h"
-#define __pow__(a)((a)*(a))
-
+#include "typesapp.h"
 
 using namespace std;
 using namespace cv;
 
-typedef pair<int, int> pii;
-typedef vector<pii> vp;
 
 class RastrearObjeto : public QThread
 {
     Q_OBJECT
 private:
     Objeto* objetos;
-    Mat matriz;    
-    static const double PI = 3.14159265;
+    Mat matriz;        
     vp time, outros;
 
     void appendVectorColor(string color, vp& estru);
 
     void localizarBola(void);
-    void localizarRobos(void);
-
-    int cmp(double x, double y, double EPS = 1e-10);
+    void localizarRobos(void);    
 
 protected:
     void run();

@@ -4,12 +4,11 @@
 #include <QObject>
 #include <QThread>
 #include <QMutex>
-#include <QMutex>
 #include "camera.h"
 #include <QImage>
 #include <time.h>
 #include <vector>
-#include <QDebug>
+#include "typesapp.h"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -28,9 +27,10 @@ private:
     bool bStop;
     bool exibe_circulo;
     bool visaoColor;
+
+
     struct timespec ts;
     QMutex mutex;
-
 protected:
     /*Quando executar automaticamente executa este método*/
     void run();
@@ -59,17 +59,17 @@ public:
     /*Retorna a situação da thread*/
     void setVisaoRGB(bool enabled);
 
-
     void setExibeCirculo(bool visible);
-
 
     bool isVisaoRGB() const;
 
+    void setCamera(Camera* cam);
 
 signals:
     /*Sinal emitido para exibir os frames nos,
      *componentes do QT*/
     void frameToQImage(QImage image);    
+    void statusMethodThread(ThreadType m);
 };
 
 #endif // CALIBRAFRAME_H

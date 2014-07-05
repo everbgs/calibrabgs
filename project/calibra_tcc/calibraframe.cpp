@@ -6,11 +6,6 @@ CalibraFrame::CalibraFrame(QObject *parent) : QThread(parent)
     this->bStop = true;
     this->exibe_circulo = false;
 
-    this->camera = new Camera();
-    //this->camera->openCamera("http://admin:admin@192.168.1.200/GetData.cgi?CH=2?resolution=800x592&req_fps=30&.mjpg");
-    this->camera->openCamera(0);
-
-
     this->RMax = 0;
     this->RMin = 0;
     this->GMax = 0;
@@ -22,14 +17,10 @@ CalibraFrame::CalibraFrame(QObject *parent) : QThread(parent)
 CalibraFrame::~CalibraFrame()
 {
     this->bStop = true;
-    delete this->camera;    
 }
 
 void CalibraFrame::run()
 {  
-    if (!this->camera->isCameraOpen())
-        return;
-
     QImage imagem;
     Mat frame, dst;
     vector<Vec3f> cir;
@@ -38,17 +29,12 @@ void CalibraFrame::run()
     unsigned int i;
 
     while (!this->bStop)
-    {        
-        {
-            QMutexLocker locker(&this->mutex);
-            if (this->bStop) continue;
-        }
-
+    {
         if (!this->camera->readFrame(frame))
-        {            
+        {
             this->bStop = true;
             continue;
-        }        
+        }
 
         /*Threshold para encontrar a região de interesse*/
         cv::inRange(frame, cv::Scalar(BMin, GMin, RMin), cv::Scalar(BMax, GMax, RMax),
@@ -90,13 +76,14 @@ void CalibraFrame::run()
         /*Espera 20 ms */
         this->msleep(20);
     }
-    this->camera->stopCamera();
+    emit statusMethodThread(CAL_FINISH);
 }
 
 void CalibraFrame::stop()
 {  
-    QMutexLocker locker(&this->mutex);
+    mutex.lock();
     this->bStop = true;
+    mutex.unlock();
 }
 
 void CalibraFrame::play()
@@ -105,7 +92,8 @@ void CalibraFrame::play()
     {         
         if (this->isStopped())
             this->bStop = false;
-        //Inicia o run(), se estiver em execução não faz nada
+
+        emit statusMethodThread(CAL_FIRST);
         start();
     }
 }
@@ -114,7 +102,7 @@ void CalibraFrame::msleep(int ms)
 {
     this->ts.tv_sec = ms / 1000;
     this->ts.tv_nsec = (ms % 1000) * 1000 * 1000;
-    nanosleep(&ts, NULL);
+    nanosleep(&ts, NULL);    
 }
 
 bool CalibraFrame::isStopped() const { return this->bStop; }
@@ -124,3 +112,8 @@ void CalibraFrame::setVisaoRGB(bool enabled){ this->visaoColor = enabled; }
 void CalibraFrame::setExibeCirculo(bool visible){ this->exibe_circulo = visible; }
 
 bool CalibraFrame::isVisaoRGB() const { return this->visaoColor; }
+
+void CalibraFrame::setCamera(Camera *cam)
+{
+    this->camera = cam;
+}

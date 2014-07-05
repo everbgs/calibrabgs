@@ -12,8 +12,9 @@ class Camera
 
 private:
     /* Classe responsavel pela captura*/
-    VideoCapture* camera;
+
 public:
+      VideoCapture* camera;
     Camera();
     ~Camera();
 
