@@ -1531,10 +1531,6 @@
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
-       <zorder>rbRGBMin</zorder>
-       <zorder>rbRGBMax</zorder>
-       <zorder>lbRGBPers</zorder>
-       <zorder>cbkCirculo</zorder>
       </widget>
       <widget class="QCheckBox" name="cbkCirculo">
        <property name="geometry">

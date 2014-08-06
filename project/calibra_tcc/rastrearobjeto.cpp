@@ -19,7 +19,7 @@ void RastrearObjeto::receberFrame(cv::Mat m)
 
 void RastrearObjeto::run()
 {
-    //localizarBola();
+    localizarBola();
     localizarRobos();
 }
 
@@ -82,7 +82,7 @@ void RastrearObjeto::localizarRobos()
     appendVectorColor(cores::AZUL, this->time);
     appendVectorColor(cores::AMARELO, this->time);
     appendVectorColor(cores::VERDE, this->outros);
-    appendVectorColor(cores::ROSA, this->outros);   
+    //appendVectorColor(cores::ROSA, this->outros);
 
     int i, j, mi, mj;
     mi = this->time.size();
@@ -96,7 +96,7 @@ void RastrearObjeto::localizarRobos()
     for (i=0; i<mi; i++)
     {
         ix = -1;
-        men = 999999;
+        men = std::numeric_limits<double>::infinity();
 
         x1 = time[i].first;
         y1 = time[i].second;
@@ -110,12 +110,13 @@ void RastrearObjeto::localizarRobos()
             euc = sqrt(euc);
 
             /*Se a distancia for menor que 65 e for menor que a atual menor*/
-            if ((euc < 65) && (cmp(euc, men) == -1))
+            if ((cmp(euc, men) == -1))
             {
                 men = euc;
                 ix = j;
             }
         }
+
 
         /*Se achou então executa a equação de
          Gonçalvez para achar a direção*/

@@ -11,6 +11,7 @@
 #include <vector>
 #include "objeto.h"
 #include "typesapp.h"
+#include <limits>
 
 using namespace std;
 using namespace cv;

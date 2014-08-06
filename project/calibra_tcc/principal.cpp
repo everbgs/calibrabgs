@@ -48,7 +48,7 @@ void Principal::processarFramesLocalizacao(QImage frame)
 {
     if (!frame.isNull())
     {
-       //ui->lbCameraJogo->setAlignment(Qt::AlignCenter);
+       ui->lbCameraJogo->setAlignment(Qt::AlignCenter);
        ui->lbCameraJogo->setPixmap(QPixmap::fromImage(frame));
     }
 }
